@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">DataMonitor</string>
+    <string name="app_name">数据监测</string>
+    <string name="Register">注册</string>
 </resources>

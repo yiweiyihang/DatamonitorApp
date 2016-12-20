@@ -9,5 +9,119 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.yiweiyihangft.datamonitor.RegisterActivity">
+    <LinearLayout
+        android:id="@+id/register_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:orientation="vertical"
+        android:gravity="center">
+        <FrameLayout
+            android:id="@+id/usernameReg_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:gravity="center">
+
+            <EditText
+                android:id="@+id/usernameReg_edit"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/default_edittext_height"
+                android:layout_marginTop="5dp"
+                android:inputType="text"
+                android:maxLength="20"
+                android:paddingLeft="55dp"
+                android:paddingRight="60dp"
+                android:hint="用户名"></EditText>
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="21dp"
+                android:layout_gravity="left|center_vertical"
+                android:layout_marginLeft="8dp"
+                android:layout_marginBottom="3dp"
+                android:background="@drawable/login_user_img"
+                android:visibility="visible" />
+
+            <!--<Button-->
+                <!--android:id="@+id/bt_usernameReg_clear"-->
+                <!--android:layout_width="23dp"-->
+                <!--android:layout_height="23dp"-->
+                <!--android:layout_gravity="right|center_vertical"-->
+                <!--android:layout_marginRight="10dp"-->
+                <!--android:background="@drawable/button_clear"-->
+                <!--android:visibility= "visible" />-->
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/user_passwardReg_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/username_layout"
+            android:layout_marginTop="10dp"
+            android:gravity="center">
+
+            <EditText
+                android:id="@+id/passwordReg_edit"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/default_edittext_height"
+                android:inputType="text"
+                android:maxLength="20"
+                android:paddingLeft="55dp"
+                android:paddingRight="60dp"
+                android:hint="密码">
+            </EditText>
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="22dp"
+                android:layout_gravity="left|center_vertical"
+                android:layout_marginLeft="7dp"
+                android:layout_marginBottom="3dp"
+                android:background="@drawable/login_passward_img" />
+
+            <!--<Button-->
+                <!--android:id="@+id/bt_pwd_eye"-->
+                <!--android:layout_width="23dp"-->
+                <!--android:layout_height="23dp"-->
+                <!--android:layout_gravity="right|center_vertical"-->
+                <!--android:layout_marginRight="10dp"-->
+                <!--android:background="@drawable/bt_eye_on" />-->
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/user_pswdReg_Confirm_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/username_layout"
+            android:layout_marginTop="10dp"
+            android:gravity="center">
+
+            <EditText
+                android:id="@+id/pswdReg_Confirm_edit"
+                android:layout_width="fill_parent"
+                android:layout_height="@dimen/default_edittext_height"
+                android:inputType="text"
+                android:maxLength="20"
+                android:paddingLeft="55dp"
+                android:paddingRight="60dp"
+                android:hint="确认密码">
+            </EditText>
+
+        </FrameLayout>
+        <Button
+            android:id="@+id/register_bt"
+            android:layout_width="fill_parent"
+            android:layout_height="@dimen/default_button_height"
+            android:layout_below="@id/save_psw_checkB"
+            android:layout_marginTop="30dp"
+            android:background="@color/colorButton"
+            android:textColor="@android:color/white"
+            android:gravity="center"
+            android:textSize="16dp"
+            android:text="注册" />
+
+    </LinearLayout>
 
 </RelativeLayout>
