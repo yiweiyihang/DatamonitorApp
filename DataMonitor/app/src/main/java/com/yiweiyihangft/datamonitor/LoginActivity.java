@@ -156,9 +156,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
              用户点击IP设置 创建IpSetDialog对象
              */
             case R.id.iP_set_bt:   //
-//                IpSetDialog ipSetDialog = new IpSetDialog(this);
-//                ipSetDialog.getDialog();
-                Toast.makeText(LoginActivity.this, "IP设置！", Toast.LENGTH_SHORT).show();
+                IpSetDialog ipSetDialog = new IpSetDialog(this);
+                ipSetDialog.getDialog();
+                Log.v(LOG_TAG,"IP设置");
                 break;
             /*
              清除用户名及密码
@@ -168,7 +168,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 login_password.setText("");
                 Log.v(LOG_TAG,"清除用户信息");
                 break;
-
             /*
              设置密码的可见性
              */
@@ -278,5 +277,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Toast.makeText(LoginActivity.this, "登录！", Toast.LENGTH_SHORT).show();
         Toast.makeText(LoginActivity.this, login_username.getText().toString(), Toast.LENGTH_SHORT).show();
         Toast.makeText(LoginActivity.this, login_password.getText().toString(), Toast.LENGTH_SHORT).show();
+        Intent welcomeI = new Intent(LoginActivity.this,WelcomeActivity.class);
+        startActivity(welcomeI);
     }
 }

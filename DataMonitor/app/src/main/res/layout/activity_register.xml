@@ -112,7 +112,7 @@
         </FrameLayout>
         <Button
             android:id="@+id/register_bt"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="@dimen/default_button_height"
             android:layout_below="@id/save_psw_checkB"
             android:layout_marginTop="30dp"

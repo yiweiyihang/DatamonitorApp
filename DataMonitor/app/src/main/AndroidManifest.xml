@@ -15,16 +15,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".RegisterActivity"
+            android:label="@string/Register"
+            android:parentActivityName=".LoginActivity">
 
-        <activity android:name=".RegisterActivity"
-            android:parentActivityName=".LoginActivity"
-            android:label="@string/Register">
             <!-- Parent activity meta-data to support 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".LoginActivity"/>
-
+                android:value=".LoginActivity" />
         </activity>
+        <activity android:name=".WelcomeActivity"></activity>
     </application>
 
 </manifest>
