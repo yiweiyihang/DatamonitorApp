@@ -5,4 +5,5 @@
     <dimen name="default_edittext_height">42dp</dimen>
     <dimen name="default_button_height">48dp</dimen>
     <dimen name="default_time_textSize">40dp</dimen>
+    <dimen name="default_button_height_small">36dp</dimen>
 </resources>

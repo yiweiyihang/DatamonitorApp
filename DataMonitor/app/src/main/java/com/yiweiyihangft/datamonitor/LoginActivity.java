@@ -3,6 +3,7 @@ package com.yiweiyihangft.datamonitor;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.util.Log;
@@ -12,6 +13,11 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import netRequest.BaseNetTopBusiness;
+import netRequest.HttpResponse;
+import netRequest.NetTopListener;
+import netRequest.firstRequest;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -32,11 +38,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private String my_ip;
     private String my_name;
     private String my_pswd;
-    private boolean savePswd;     // 判断是否保存用户名和密码
+    private boolean flag;     // 判断是否保存用户名和密码
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
         setContentView(R.layout.activity_login);
         initView();
     }
@@ -60,14 +68,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Constants.Url = ip + ":" + port;     // Build URL
         String name = sp.getString("name", "");     // (String key, String default_value)
         String pswd = sp.getString("pswd", "");
-        savePswd = sp.getBoolean("savePswd", false);
-        userPswd_CheckB.setChecked(savePswd);
+        flag = sp.getBoolean("flag", false);
+        userPswd_CheckB.setChecked(flag);
 
         // 判断是否有之前存储的用户账号保存 如有 显示在页面中
-        if (!name.equals("") && savePswd == true) {
+        if (!name.equals("") && flag == true) {
             login_username.setText(name);
         }
-        if (!pswd.equals("") && savePswd == true) {
+        if (!pswd.equals("") && flag == true) {
             login_password.setText(pswd);
         }
 
@@ -118,12 +126,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    savePswd = true;   // 选中则flag为true保存密码
+                    flag= true;   // 选中则flag为true保存密码
 
                 } else {
-                    savePswd = false;
+                    flag = false;
                 }
-
             }
         });
     }
@@ -184,7 +191,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-
     /*
     检查用户名和密码是否为空  返回一个布尔值
     */
@@ -202,82 +208,79 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     /*
     处理用户登录操作
      */
-//    private void login() {
-//
-//        firstRequest arequest = new firstRequest();
-//
-//        // 读入登录页面的用户信息和密码
-//        // 填充Request所需的信息
-//        arequest.uname = login_username.getText().toString().trim();   // trim():去掉字符串首尾的空格
-//        arequest.upwd = login_password.getText().toString().trim();
-//        my_name = login_username.getText().toString();
-//        my_pswd = login_password.getText().toString();
-//        arequest.flag = "log";    // flag标志用来表示对数据库user表的登录操作
-//
-//        /*
-//        接口: NetTopListener()  method: onSuccess() onFail()  onError() 需要进行方法重写
-//        BaseNetTopBusiness 负责与Web服务器连接 发送请求 待看！！
-//         */
-//        BaseNetTopBusiness baseNetTopBusiness = new BaseNetTopBusiness(new NetTopListener() {
-//
-//            /*
-//            *连接成功的处理
-//            * @ param: ??   如何判断是否成功 待看！！
-//            */
-//            @Override
-//            public void onSuccess(HttpResponse response) {
-//                System.out.println("成功");
-//                String s = new String(response.bytes);
-//                System.out.println(s);
-//
-//                // 判断用户登录是否成功
-//                if (s.equals("success") ) {
-//                    Toast.makeText(LoginActivity.this, "登录成功！", Toast.LENGTH_SHORT).show();
-//                    SharedPreferences.Editor editor = sp.edit();  // 编辑用户偏好设置
-//                    Constants.UserName = my_name;    //保存用户名
-//
-//                    // 如果登陆成功 用户选择记住密码  则将输入的用户信息存入SharedPreference中
-//                    if(flag){
-//                        editor.putString("name",my_name);
-//                        editor.putString("pswd",my_pswd);
-//                    }
-//                    editor.putBoolean("flag", flag);   // 将用户密码已保存标志存入SharedPreference
-//                    editor.commit();     // 提交用户偏好设置信息
-//
-//                    // 发送显示Intent  切换到ActionBarActivity
-//                    Intent intent = new Intent(LoginActivity.this, ActionBarActivity.class);
-//                    startActivity(intent);
-//                }else{
-//                    Toast.makeText(LoginActivity.this, "登录失败，用户名或密码输入不正确！", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//            /*
-//             * 连接失败的处理
-//             * 如何判断是否成功 待看！！
-//             */
-//            @Override
-//            public void onFail() {
-//                System.out.println("on fail");
-//                Toast.makeText(LoginActivity.this, "登录失败，用户名或密码或URL输入不正确！", Toast.LENGTH_SHORT).show();
-//            }
-//
-//            @Override
-//            public void onError() {
-//                System.out.println("on error");
-//            }
-//        });
-//
-//        // 发送Request连接请求
-//        baseNetTopBusiness.startRequest(arequest);
-//
-//    }
-
-
     private void login() {
-        Toast.makeText(LoginActivity.this, "登录！", Toast.LENGTH_SHORT).show();
-        Toast.makeText(LoginActivity.this, login_username.getText().toString(), Toast.LENGTH_SHORT).show();
-        Toast.makeText(LoginActivity.this, login_password.getText().toString(), Toast.LENGTH_SHORT).show();
-        Intent welcomeI = new Intent(LoginActivity.this,WelcomeActivity.class);
-        startActivity(welcomeI);
+
+        firstRequest arequest = new firstRequest();
+
+        // 读入登录页面的用户信息和密码
+        // 填充Request所需的信息
+        arequest.uname = login_username.getText().toString().trim();   // trim():去掉字符串首尾的空格
+        arequest.upwd = login_password.getText().toString().trim();
+        my_name = login_username.getText().toString();
+        my_pswd = login_password.getText().toString();
+        arequest.flag = "log";    // flag标志用来表示对数据库user表的登录操作
+
+        /*
+        接口: NetTopListener()  method: onSuccess() onFail()  onError() 需要进行方法重写
+        BaseNetTopBusiness 负责与Web服务器连接 发送请求 待看！！
+         */
+        BaseNetTopBusiness baseNetTopBusiness = new BaseNetTopBusiness(new NetTopListener() {
+
+            /*
+             * 连接成功的处理
+             */
+            @Override
+            public void onSuccess(HttpResponse response) {
+                System.out.println("成功");
+                String s = new String(response.bytes);
+                System.out.println(s);
+
+                // 判断用户登录是否成功
+                if (s.equals("success") ) {
+                    Toast.makeText(LoginActivity.this, "登录成功！", Toast.LENGTH_SHORT).show();
+                    SharedPreferences.Editor editor = sp.edit();  // 编辑用户偏好设置
+                    Constants.UserName = my_name;    //保存用户名
+
+                    // 如果登陆成功 用户选择记住密码  则将输入的用户信息存入SharedPreference中
+                    if(flag){
+                        editor.putString("name",my_name);
+                        editor.putString("pswd",my_pswd);
+                    }
+                    editor.putBoolean("flag", flag);   // 将用户密码已保存标志存入SharedPreference
+                    editor.commit();     // 提交用户偏好设置信息
+
+                    // 发送显示Intent  切换到ActionBarActivity
+                    Intent intent = new Intent(LoginActivity.this, WelcomeActivity.class);
+                    startActivity(intent);
+                }else{
+                    Toast.makeText(LoginActivity.this, "登录失败，用户名或密码输入不正确！", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            /*
+             * 连接失败的处理
+             */
+            @Override
+            public void onFail() {
+                System.out.println("on fail");
+                Toast.makeText(LoginActivity.this, "登录失败，用户名或密码或URL输入不正确！", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError() {
+                System.out.println("on error");
+            }
+        });
+        // 发送Request连接请求
+        baseNetTopBusiness.startRequest(arequest);
     }
+
+
+//    private void login() {
+//        Toast.makeText(LoginActivity.this, "登录！", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(LoginActivity.this, login_username.getText().toString(), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(LoginActivity.this, login_password.getText().toString(), Toast.LENGTH_SHORT).show();
+//        Intent welcomeI = new Intent(LoginActivity.this,WelcomeActivity.class);
+//        startActivity(welcomeI);
+//    }
 }

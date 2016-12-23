@@ -1,11 +1,17 @@
 package com.yiweiyihangft.datamonitor;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import netRequest.BaseNetTopBusiness;
+import netRequest.HttpResponse;
+import netRequest.NetTopListener;
+import netRequest.firstRequest;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -85,37 +91,37 @@ public class RegisterActivity extends AppCompatActivity {
                     return;
                 }else {
                     Toast.makeText(RegisterActivity.this,"注册",Toast.LENGTH_SHORT).show();
-//                    firstRequest arequest = new firstRequest();
-//                    System.out.println(arequest.requestUrl);
-//
-//                    arequest.uname = register_username.getText().toString().trim();
-//                    arequest.upwd = register_passwd.getText().toString().trim();
-//                    arequest.flag = "reg";
-//
-//                    BaseNetTopBusiness baseNetTopBusiness=new BaseNetTopBusiness(new NetTopListener(){
-//                        @Override
-//                        public void onSuccess(HttpResponse response) {
-//                            //System.out.println("成功");
-//                            String s = new String(response.bytes);
-//                            // System.out.println(s);
-//                            if (s.equals("success") ) {
-//                                Toast.makeText(RegisterActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
-//                                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-//                                startActivity(intent);
-//                            }
-//                        }
-//                        @Override
-//                        public void onFail() {
-//                            System.out.println("on fail");
-//                            Toast.makeText(RegisterActivity.this, "注册失败", Toast.LENGTH_SHORT).show();
-//
-//                        }
-//                        @Override
-//                        public void onError() {
-//                            System.out.println("on error");
-//                        }
-//                    });
-//                    baseNetTopBusiness.startRequest(arequest);
+                    firstRequest arequest = new firstRequest();
+                    System.out.println(arequest.requestUrl);
+
+                    arequest.uname = register_username.getText().toString().trim();
+                    arequest.upwd = register_passwd.getText().toString().trim();
+                    arequest.flag = "reg";
+
+                    BaseNetTopBusiness baseNetTopBusiness=new BaseNetTopBusiness(new NetTopListener(){
+                        @Override
+                        public void onSuccess(HttpResponse response) {
+                            //System.out.println("成功");
+                            String s = new String(response.bytes);
+                            // System.out.println(s);
+                            if (s.equals("success") ) {
+                                Toast.makeText(RegisterActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                                startActivity(intent);
+                            }
+                        }
+                        @Override
+                        public void onFail() {
+                            System.out.println("on fail");
+                            Toast.makeText(RegisterActivity.this, "注册失败", Toast.LENGTH_SHORT).show();
+
+                        }
+                        @Override
+                        public void onError() {
+                            System.out.println("on error");
+                        }
+                    });
+                    baseNetTopBusiness.startRequest(arequest);
                 }
             }
 

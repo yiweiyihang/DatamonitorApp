@@ -1,5 +1,6 @@
 package com.yiweiyihangft.datamonitor;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -30,18 +31,22 @@ public class WelcomeActivity extends AppCompatActivity {
      */
     private void initView() {
         mTime = (TextView) findViewById(R.id.data_show_text);
+        SimpleDateFormat formatter = new SimpleDateFormat("MM月dd日 HH:mm");
+        Date curDate = new Date(System.currentTimeMillis());
+        String sysTimeStr = formatter.format(curDate);
+        mTime.setText(sysTimeStr);
         new TimeThread().start();
         mUserSetBt = (Button) findViewById(R.id.userSet_bt);
         mDataMonitorBt = (Button) findViewById(R.id.dataMonitor_bt);
 
-        dateShow();     // 显示当前日期
         /*
          监听用户设置按钮
          */
         mUserSetBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent userSet = new()
+                Intent userSet = new Intent(WelcomeActivity.this,UserSetActivity.class);
+                startActivity(userSet);
                 Toast.makeText(WelcomeActivity.this, "用户设置！", Toast.LENGTH_SHORT).show();
             }
         });
@@ -58,11 +63,6 @@ public class WelcomeActivity extends AppCompatActivity {
         });
     }
 
-    private String dateShow() {
-        return "setDate";
-    }
-
-
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -70,7 +70,7 @@ public class WelcomeActivity extends AppCompatActivity {
             switch (msg.what) {
                 case msgKey1:
                     // 获取当前时间并展示
-                    SimpleDateFormat formatter = new SimpleDateFormat("MM月dd日 HH:mm:ss");
+                    SimpleDateFormat formatter = new SimpleDateFormat("MM月dd日 HH:mm");
                     Date curDate = new Date(System.currentTimeMillis());
                     String sysTimeStr = formatter.format(curDate);
                     mTime.setText(sysTimeStr);
@@ -87,7 +87,7 @@ public class WelcomeActivity extends AppCompatActivity {
         public void run() {
             do {
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(20*1000);
                     Message msg = new Message();
                     msg.what = msgKey1;
                     mHandler.sendMessage(msg);
