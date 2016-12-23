@@ -1,14 +1,20 @@
 package com.yiweiyihangft.datamonitor;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class WelcomeActivity extends AppCompatActivity {
-    private TextView dateShow;
+    private static final int msgKey1 = 1;
+    private TextView mTime;
     private Button mUserSetBt;
     private Button mDataMonitorBt;
 
@@ -22,10 +28,11 @@ public class WelcomeActivity extends AppCompatActivity {
     /*
      初始化欢迎界面
      */
-    private void initView(){
-        dateShow = (TextView)findViewById(R.id.data_show_text);
-        mUserSetBt = (Button)findViewById(R.id.userSet_bt);
-        mDataMonitorBt = (Button)findViewById(R.id.dataMonitor_bt);
+    private void initView() {
+        mTime = (TextView) findViewById(R.id.data_show_text);
+        new TimeThread().start();
+        mUserSetBt = (Button) findViewById(R.id.userSet_bt);
+        mDataMonitorBt = (Button) findViewById(R.id.dataMonitor_bt);
 
         dateShow();     // 显示当前日期
         /*
@@ -35,7 +42,7 @@ public class WelcomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 //                Intent userSet = new()
-                Toast.makeText(WelcomeActivity.this,"用户设置！",Toast.LENGTH_SHORT).show();
+                Toast.makeText(WelcomeActivity.this, "用户设置！", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -46,12 +53,48 @@ public class WelcomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 //                Intent dataMonitor = new();
-                Toast.makeText(WelcomeActivity.this,"数据监测！",Toast.LENGTH_SHORT).show();
+                Toast.makeText(WelcomeActivity.this, "数据监测！", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private String dateShow(){
+    private String dateShow() {
         return "setDate";
+    }
+
+
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case msgKey1:
+                    // 获取当前时间并展示
+                    SimpleDateFormat formatter = new SimpleDateFormat("MM月dd日 HH:mm:ss");
+                    Date curDate = new Date(System.currentTimeMillis());
+                    String sysTimeStr = formatter.format(curDate);
+                    mTime.setText(sysTimeStr);
+                    break;
+
+                default:
+                    break;
+            }
+        }
+    };
+
+    public class TimeThread extends Thread {
+        @Override
+        public void run() {
+            do {
+                try {
+                    Thread.sleep(1000);
+                    Message msg = new Message();
+                    msg.what = msgKey1;
+                    mHandler.sendMessage(msg);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } while (true);
+        }
     }
 }
