@@ -21,7 +21,7 @@ public class Constants {
     public static Map<Integer,Map<Integer,String>> promap = new HashMap<>();//保存用户勾选信息
     public static Map<Integer,String> paramap = new LinkedHashMap<>();
     public static String UserName;
-    public static String frequency = "10000";
+    public static String frequency = "";
     public static JSONObject dataObject;
     public static Map<Integer,String> timemap = new HashMap<>();
     public static Map<Integer,JSONObject> alldata = new LinkedHashMap<Integer,JSONObject>();;

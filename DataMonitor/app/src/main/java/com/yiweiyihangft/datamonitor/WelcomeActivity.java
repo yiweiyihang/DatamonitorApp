@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -47,7 +46,7 @@ public class WelcomeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent userSet = new Intent(WelcomeActivity.this,UserSetActivity.class);
                 startActivity(userSet);
-                Toast.makeText(WelcomeActivity.this, "用户设置！", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(WelcomeActivity.this, "用户设置！", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -57,8 +56,9 @@ public class WelcomeActivity extends AppCompatActivity {
         mDataMonitorBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Intent dataMonitor = new();
-                Toast.makeText(WelcomeActivity.this, "数据监测！", Toast.LENGTH_SHORT).show();
+                Intent dataMonitor = new Intent(WelcomeActivity.this,DataSetActivity.class);
+                startActivity(dataMonitor);
+//                Toast.makeText(WelcomeActivity.this, "数据监测！！", Toast.LENGTH_SHORT).show();
             }
         });
     }

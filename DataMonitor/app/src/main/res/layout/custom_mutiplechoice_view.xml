@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/mutiplechoice_title"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center_vertical"
+        android:padding="5dp"
+        android:background="@color/colorButton"
+        android:textSize="18sp"
+        android:textColor="@android:color/white"
+        tools:text="标题"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_margin="1dp"
+        android:background="@android:color/background_light">
+        <ListView
+            android:id="@+id/mutiplechoice_listview"
+            android:layout_width="match_parent"
+            android:layout_height="450dp"
+            android:layout_weight="4"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:background="@android:color/darker_gray">
+
+            <Button
+                android:id="@+id/mutiplechoice_selectall_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/Background"
+                android:text="全选" />
+
+            <Button
+                android:id="@+id/mutiplechoice_ok_btn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/Background"
+                android:text="确定" />
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

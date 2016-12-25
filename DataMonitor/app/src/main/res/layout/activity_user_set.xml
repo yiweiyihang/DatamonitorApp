@@ -29,7 +29,7 @@
 
         <EditText
             android:id="@+id/frequency_Edit"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@color/Background"
             android:layout_marginLeft="30dp"

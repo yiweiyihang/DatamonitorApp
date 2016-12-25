@@ -1,5 +1,6 @@
 package com.yiweiyihangft.datamonitor;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -19,6 +20,7 @@ public class UserSetActivity extends AppCompatActivity {
     private Button change_submit;
     private Button frequencySet_bt;
     private EditText frequency_edit;
+    private SharedPreferences sp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,13 +36,28 @@ public class UserSetActivity extends AppCompatActivity {
         new_passwd = (EditText) findViewById(R.id.new_passwd_edit);
         confirm_passwd = (EditText) findViewById(R.id.confirm_passwd_edit);
         change_submit = (Button) findViewById(R.id.change_submit);
+        sp = getSharedPreferences("Myproject",0);
+        String frequency = sp.getString("frequency","");
+        if (!frequency.equals("")) {
+            frequency_edit.setText(frequency);
+        }
 
         // 监听频率设置确认按钮
         frequencySet_bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Constants.frequency = frequency_edit.getText().toString();  // 获取用户频率要求
-                Toast.makeText(UserSetActivity.this, "频率确认！", Toast.LENGTH_SHORT).show();
+                String frequency = frequency_edit.getText().toString();
+
+                SharedPreferences.Editor editor = sp.edit();  // 编辑用户偏好设置
+                frequency = frequency;
+
+                // 如果登陆成功 用户选择记住密码  则将输入的用户信息存入SharedPreference中
+                if(!frequency.equals("")){
+                    editor.putString("frequency",frequency);
+                }
+                editor.commit();     // 提交用户偏好设置信息
+//                Constants.frequency = frequency_edit.getText().toString();  // 获取用户频率要求
+                Toast.makeText(UserSetActivity.this, "频率设置成功！", Toast.LENGTH_SHORT).show();
             }
         });
 
