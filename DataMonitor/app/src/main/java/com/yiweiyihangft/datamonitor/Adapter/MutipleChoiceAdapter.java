@@ -12,6 +12,7 @@ import com.yiweiyihangft.datamonitor.R;
 
 /**
  * Created by 32618 on 2016/12/24.
+ * 点选工序后显示的多选测点Dialog的适配器
  */
 
 public class MutipleChoiceAdapter extends BaseAdapter {

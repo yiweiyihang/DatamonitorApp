@@ -5,4 +5,7 @@
     <string name="Instr_dataMonitorSet">点击数据监测选择工序</string>
     <string name="UserSet">用户设置</string>
     <string name="DataSet">工序设置</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

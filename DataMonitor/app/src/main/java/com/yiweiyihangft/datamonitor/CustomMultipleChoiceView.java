@@ -13,11 +13,13 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.yiweiyihangft.datamonitor.Adapter.MutipleChoiceAdapter;
 
 /**
  * 自定义的带 全选/反选 功能的多选对话框
+ * 显示用户选择的工序对应的可观测的测点信息  可多选
  *
  */
 public class CustomMultipleChoiceView extends LinearLayout {
@@ -26,7 +28,7 @@ public class CustomMultipleChoiceView extends LinearLayout {
     private String[] data;
     private TextView title;
     private ListView lv;
-    private onSelectedListener onSelectedListener;//确定选择监听器
+    private onSelectedListener onSelectedListener; //确定选择监听器
     private boolean curWillCheckAll = false;//当前点击按钮时是否将全选
 
     public CustomMultipleChoiceView(Context context, AttributeSet attrs) {
@@ -67,6 +69,7 @@ public class CustomMultipleChoiceView extends LinearLayout {
                 MutipleChoiceAdapter.ViewHolder holder = (MutipleChoiceAdapter.ViewHolder) arg1.getTag();
                 // 改变CheckBox的状态
                 holder.cb.toggle();
+                Toast.makeText(getContext(), "选中这个！", Toast.LENGTH_SHORT).show();
                 // 将CheckBox的选中状况记录下来
                 mAdapter.getIsSelected()[position]=holder.cb.isChecked();
             }
@@ -74,6 +77,9 @@ public class CustomMultipleChoiceView extends LinearLayout {
         addView(view);
     }
 
+    /*
+      用户选择的测点显示设置 checkbox勾选
+     */
     public void setData(String[] data, boolean[] isSelected){
         if(data == null){
             throw new IllegalArgumentException("data is null");
@@ -131,18 +137,7 @@ public class CustomMultipleChoiceView extends LinearLayout {
             mAdapter.notifyDataSetChanged();
         }
     }
-    /**
-     * 反选
-     */
-    public void reverseSelect(){
-        if(data != null){
-            for (int i = 0; i < data.length; i++) {
-                mAdapter.getIsSelected()[i] = !mAdapter.getIsSelected()[i];
-            }
-            // 刷新listview和TextView的显示
-            mAdapter.notifyDataSetChanged();
-        }
-    }
+
 
     private class MyClickListener implements OnClickListener{
         @Override

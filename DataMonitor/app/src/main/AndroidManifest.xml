@@ -50,8 +50,8 @@
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
         -->
 
-
-        <activity android:name=".ShowDataActivity"></activity>
+        <activity android:name=".ShowDataActivity" />
+        <activity android:name=".ShowLineChart"></activity>
     </application>
 
 </manifest>

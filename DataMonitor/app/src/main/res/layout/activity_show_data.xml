@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_show_data"
     android:layout_width="match_parent"
@@ -8,6 +8,50 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
     tools:context="com.yiweiyihangft.datamonitor.ShowDataActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/proNameId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="工序:"
+            android:textStyle="bold"
+            android:textSize="18dp"
+            />
+        <TextView
+            android:id="@+id/proName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            tools:text="工序名称"/>
+        <TextView
+            android:id="@+id/proTimeId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" 时间:"
+            android:textSize="16dp"
+            android:layout_marginLeft="8dp"
+            android:layout_gravity="center" />
+        <TextView
+            android:id="@+id/proTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
-</RelativeLayout>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pagers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+        <!--android:layout_below="@+id/linearpro" -->
+
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+
+</LinearLayout>

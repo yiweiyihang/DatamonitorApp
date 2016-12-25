@@ -9,8 +9,6 @@ import android.widget.PopupWindow;
 
 import org.json.JSONObject;
 
-import java.util.LinkedHashMap;
-
 import netRequest.BaseNetTopBusiness;
 import netRequest.HttpResponse;
 import netRequest.NetTopListener;
@@ -18,6 +16,7 @@ import netRequest.ThirdRequest;
 
 /**
  * Created by 32618 on 2016/12/24.
+ * 显示对应工序可选择的测点对话框
  */
 public class Dialog{
     private Context context;
@@ -29,9 +28,15 @@ public class Dialog{
     public String[] paraItems;
     private PopupWindow stationSelectDialog;
 
+    /*
+       @param: 工序ID
+     */
+
     public void getDialog(final int i){
+
+        // ThirdRequest  申请获得工序对应的测点信息
         ThirdRequest arequest = new ThirdRequest();
-        arequest.proID = Integer.toString(i);//传入id对应工序id
+        arequest.proID = Integer.toString(i);  //传入id对应工序id
         BaseNetTopBusiness baseNetTopBusiness=new BaseNetTopBusiness(new NetTopListener(){
             @Override
             public void onSuccess(HttpResponse response) {
@@ -45,10 +50,13 @@ public class Dialog{
                     System.out.println(str.length());
                     JSONObject object = new JSONObject(str);
                     System.out.println("======:" + object.length());
+                    // 获取测点项目字符串
                     paraItems = new String[object.length()];
-                    for (int k = 1; k <= object.length(); k++) {//根据数据库获取的id与测点名包装的json对象
+                    for (int k = 1; k <= object.length(); k++) {
+                        // 读取JSON解析的测点名称存入字符串
                         paraItems[k - 1] = object.getString(Integer.toString(k));
                     }
+
                     showMutiChoiceDialog(paraItems,i);
                 }
                 catch (Exception e)
@@ -68,16 +76,24 @@ public class Dialog{
         baseNetTopBusiness.startRequest(arequest);
 
     }
+
+    /*
+     显示多项选择对话框
+     @param: 单个工序对应的测点字符串，对应的工序ID
+     */
     private void showMutiChoiceDialog(final String[] stationsMean,final int i ){
         if(stationSelectDialog == null){
             LayoutInflater inflater = LayoutInflater.from(context);
+            // 利用CustomMultipleChoiceView 填充
             View view = inflater.inflate(R.layout.dialog_multiplechoice, null);
             CustomMultipleChoiceView mutipleChoiceView = (CustomMultipleChoiceView) view.findViewById(R.id.CustomMultipleChoiceView);
+            // 参数 String[] data, boolean[] isSelected
             mutipleChoiceView.setData(stationsMean, null);
-            System.out.println("station.length-"+stationsMean.length);
+            // 默认情况全选
             mutipleChoiceView.selectAll();
             mutipleChoiceView.setTitle("多选");
             stationSelectDialog = new PopupWindow(view, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+            // 存储用户选择的测点设置到Constants.paramp中
             mutipleChoiceView.setOnSelectedListener(new CustomMultipleChoiceView.onSelectedListener() {
                 @Override
                 public void onSelected(Boolean[] sparseBooleanArray) {
@@ -88,10 +104,11 @@ public class Dialog{
                         }
                     }
                     Constants.promap.put(i, Constants.paramap);
-                    Constants.paramap = new LinkedHashMap<Integer, String>();
+//                    Constants.paramap = new LinkedHashMap<Integer, String>();
                 }
             });
         }
+        // 设置PopupWindow的显示位置
         stationSelectDialog.showAtLocation(view, Gravity.CENTER, 0, 0);
     }
 }

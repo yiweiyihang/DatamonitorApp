@@ -8,4 +8,6 @@
     <color name="colorButtonLight">#A0DDF6</color>
     <color name="colorTextHint">#AFAFAF</color>
     <color name="Background">#EBEBEB</color>
+    <color name="ShowDataBackground">#8C8C8C</color>
+    <color name="ShowDataBackground2">#FCFCFC</color>
 </resources>
