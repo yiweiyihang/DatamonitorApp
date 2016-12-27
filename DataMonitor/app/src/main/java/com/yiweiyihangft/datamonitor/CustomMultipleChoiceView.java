@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.yiweiyihangft.datamonitor.Adapter.MutipleChoiceAdapter;
 
@@ -69,7 +68,7 @@ public class CustomMultipleChoiceView extends LinearLayout {
                 MutipleChoiceAdapter.ViewHolder holder = (MutipleChoiceAdapter.ViewHolder) arg1.getTag();
                 // 改变CheckBox的状态
                 holder.cb.toggle();
-                Toast.makeText(getContext(), "选中这个！", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getContext(), "选中这个！", Toast.LENGTH_SHORT).show();
                 // 将CheckBox的选中状况记录下来
                 mAdapter.getIsSelected()[position]=holder.cb.isChecked();
             }

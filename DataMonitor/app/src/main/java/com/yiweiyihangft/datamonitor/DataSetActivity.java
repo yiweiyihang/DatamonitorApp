@@ -17,6 +17,9 @@ import netRequest.HttpResponse;
 import netRequest.NetTopListener;
 import netRequest.SecondRequest;
 
+/*
+  工序选择设置
+ */
 public class DataSetActivity extends AppCompatActivity {
 
     final String LOG_TAG = "DataSetActivity";
@@ -43,7 +46,6 @@ public class DataSetActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Constants.proItems = proItems;   // 存取所有工序名称
                 if(Constants.proChoose!=null&&countClick!=null) {
-                    //System.out.println(countClick.length);
                     // 清空缓存
                     Constants.proChoose.clear();
                     for (int i = 0; i < countClick.length; i++) {
@@ -96,9 +98,14 @@ public class DataSetActivity extends AppCompatActivity {
                         checkBox = new CheckBox(DataSetActivity.this);
                         String s = object.getString(Integer.toString(i));
                         proItems[i] = s;
+                        // 设置工序显示的字体 宽度等
                         checkBox.setText(s);
+                        checkBox.setTextSize(20);
+//                        checkBox.setTextColor(getResources().getColor(R.color.TextColor));
                         checkBox.setId(i);
                         checkBox.setOnClickListener(on);
+                        checkBox.setHeight(120);
+                        // 动态添加到布局中
                         ll.addView(checkBox);
                     }
                 } catch (Exception e) {
@@ -135,5 +142,11 @@ public class DataSetActivity extends AppCompatActivity {
                 dialog.getDialog(v.getId());
             }
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Constants.proItems = proItems;
     }
 }

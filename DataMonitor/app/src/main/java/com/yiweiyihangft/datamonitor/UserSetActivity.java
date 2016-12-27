@@ -48,14 +48,12 @@ public class UserSetActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String frequency = frequency_edit.getText().toString();
-
                 SharedPreferences.Editor editor = sp.edit();  // 编辑用户偏好设置
                 // 如果登陆成功 用户选择记住密码  则将输入的用户信息存入SharedPreference中
                 if(!frequency.equals("")){
                     editor.putString("frequency",frequency);
                 }
                 editor.commit();     // 提交用户偏好设置信息
-
                 Constants.frequency = frequency_edit.getText().toString();  // 获取用户频率要求
                 Toast.makeText(UserSetActivity.this, "频率设置成功:"+Constants.frequency.toString(), Toast.LENGTH_SHORT).show();
             }

@@ -2,6 +2,7 @@ package com.yiweiyihangft.datamonitor.utils;
 
 /**
  * Created by 32618 on 2016/12/25.
+ * 将测点信息 划分为 测点名称 测点值 测点单位
  */
 
 public class GetSubString {

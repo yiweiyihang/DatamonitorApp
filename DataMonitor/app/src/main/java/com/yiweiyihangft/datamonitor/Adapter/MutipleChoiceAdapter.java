@@ -65,9 +65,11 @@ public class MutipleChoiceAdapter extends BaseAdapter {
         if (convertView == null) {
             // 获得ViewHolder对象
             holder = new ViewHolder();
+
             // 导入布局并赋值给convertview
             convertView = inflater.inflate(R.layout.custom_mutiplechoice_view_list_item, null);
             holder.tv = (TextView) convertView.findViewById(R.id.item_tv);
+            holder.tv.setTextSize(16);
             holder.cb = (CheckBox) convertView.findViewById(R.id.item_cb);
             // 为view设置标签
             convertView.setTag(holder);

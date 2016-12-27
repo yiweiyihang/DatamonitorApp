@@ -16,7 +16,7 @@ import java.util.List;
 
 /**
  * Created by 32618 on 2016/12/25.
- * 用户选择的工序页面的测点单条显示
+ *  用户选择的工序页面的详细测点信息单条显示Adapter
  *
  */
 
@@ -80,8 +80,11 @@ public class MyAdapter extends BaseAdapter {
             contentView.setBackgroundColor(Color.parseColor("#FCFCFC"));
         }
         title.setText(data[0]);
+        title.setTextSize(18);
         value.setText(data[1]);
+        value.setTextSize(18);
         unit.setText(data[2]);
+        unit.setTextSize(16);
         return contentView;
     }
 }

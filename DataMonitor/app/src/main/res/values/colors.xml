@@ -10,4 +10,5 @@
     <color name="Background">#EBEBEB</color>
     <color name="ShowDataBackground">#8C8C8C</color>
     <color name="ShowDataBackground2">#FCFCFC</color>
+    <color name="TextColor">#5B5D5D</color>
 </resources>

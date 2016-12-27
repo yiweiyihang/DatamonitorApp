@@ -30,7 +30,6 @@ public class ProChooseed {
         if(Constants.promap!=null) {
             //System.out.println(Constants.promap.get(id));
             paraChoose = new String[Constants.promap.get(id).size()];
-
             for (Map.Entry<Integer, String> entry : Constants.promap.get(id).entrySet()) {
                 paraChoose[j] = entry.getValue();
                 j++;

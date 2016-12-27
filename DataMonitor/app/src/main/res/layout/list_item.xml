@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/mylistItem"
+    android:paddingTop="16dp"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal" >
     <TextView
@@ -13,10 +14,10 @@
         android:gravity="center"
         android:textSize="16dp"
         android:layout_height="25dp"/>
-    <View
-        android:layout_width="0.5dp"
-        android:background="#000000"
-        android:layout_height="match_parent"/>
+    <!--<View-->
+        <!--android:layout_width="0.5dp"-->
+        <!--android:background="#000000"-->
+        <!--android:layout_height="match_parent"/>-->
     <TextView
         android:id="@+id/value"
         tools:text="测点值"
@@ -25,10 +26,10 @@
         android:layout_width="0px"
         android:layout_height="25dp"
         android:textSize="16dp"/>
-    <View
-        android:layout_width="0.5dp"
-        android:background="#000000"
-        android:layout_height="match_parent"/>
+    <!--<View-->
+        <!--android:layout_width="0.5dp"-->
+        <!--android:background="#000000"-->
+        <!--android:layout_height="match_parent"/>-->
     <TextView
         android:id="@+id/unit"
         android:layout_weight="1"
@@ -36,10 +37,10 @@
         android:layout_width="0px"
         android:layout_height="25dp"
         android:textSize="16dp"/>
-    <View
-        android:layout_width="0.5dp"
-        android:background="#000000"
-        android:layout_height="match_parent"/>
+    <!--<View-->
+        <!--android:layout_width="0.5dp"-->
+        <!--android:background="#000000"-->
+        <!--android:layout_height="match_parent"/>-->
     <!--<TextView-->
     <!--android:id="@+id/school"-->
     <!--android:layout_weight="1"-->

@@ -1,6 +1,7 @@
 package com.yiweiyihangft.datamonitor;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -37,6 +38,7 @@ public class ShowDataActivity extends AppCompatActivity {
     private GetProId mGetProId = new GetProId();
     private ProChooseed mProChooseed = new ProChooseed();
     private int proId;
+    private SharedPreferences sp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,9 +55,15 @@ public class ShowDataActivity extends AppCompatActivity {
         //System.out.println("count=" + count);
         proName = (TextView) findViewById(R.id.proName);
         proTime = (TextView) findViewById(R.id.proTime);
+        sp = getSharedPreferences("Myproject",0);
+        String frequency = sp.getString("frequency","");
+        if (!frequency.equals("")) {
+            Constants.frequency = frequency;
+        }
         // 清空缓存
         Constants.alldata.clear();
         Constants.timemap.clear();
+//        Constants.paramap.clear();
 //        final GetProId getProId = new GetProId();
 //        final ProChooseed pc = new ProChooseed();
 
@@ -86,8 +94,9 @@ public class ShowDataActivity extends AppCompatActivity {
                             // 如果本地存储的时间不为空 显示
                             if(Constants.timemap.get(0)!=null){
                                 proTime.setText(Constants.timemap.get(0));
-                                proTime.setTextColor(Color.BLACK);
-                                proTime.setTextSize(24);
+                                proTime.setTextColor(Color.BLUE);
+                                Toast.makeText(ShowDataActivity.this, "show!!", Toast.LENGTH_SHORT).show();
+                                proTime.setTextSize(20);
                             }
                             myPagerAdapter = new MyPagerAdapter(count, Constants.proChoose, getSupportFragmentManager());
                             pager.setAdapter(myPagerAdapter);
@@ -144,7 +153,6 @@ public class ShowDataActivity extends AppCompatActivity {
                             if(i==Constants.proChoose.size()) {
                                 for(int j=0;j<Constants.proChoose.size();j++){
                                     ListViewFragment mListViewFragment =(ListViewFragment) myPagerAdapter.getFragment(j);
-                                    // System.out.println(f.myAdapter);
                                     int proId = mListViewFragment.ProId;
                                     //System.out.println("shuaxin de proid:");
                                     // System.out.println(proId);
@@ -201,5 +209,6 @@ public class ShowDataActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         mTimer.cancel();
+        Constants.paramap.clear();
     }
 }

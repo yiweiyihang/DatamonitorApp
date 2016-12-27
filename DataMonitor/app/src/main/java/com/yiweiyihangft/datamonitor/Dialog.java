@@ -88,6 +88,7 @@ public class Dialog{
             View view = inflater.inflate(R.layout.dialog_multiplechoice, null);
             CustomMultipleChoiceView mutipleChoiceView = (CustomMultipleChoiceView) view.findViewById(R.id.CustomMultipleChoiceView);
             // 参数 String[] data, boolean[] isSelected
+            Constants.proChoose.clear();
             mutipleChoiceView.setData(stationsMean, null);
             // 默认情况全选
             mutipleChoiceView.selectAll();
@@ -100,7 +101,7 @@ public class Dialog{
                     stationSelectDialog.dismiss();
                     for (int j = 0; j < sparseBooleanArray.length; j++) {
                         if (sparseBooleanArray[j]) {
-                            Constants.paramap.put(j+1, stationsMean[j]);
+                            Constants.paramap.put(j+1, stationsMean[j]);  // param 从1开始
                         }
                     }
                     Constants.promap.put(i, Constants.paramap);

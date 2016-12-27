@@ -146,11 +146,11 @@ public class ListViewFragment extends Fragment {
         String[] str;
         str =new String[]{"测点描述","测点值","单位"} ;
         table1.add(str);
-        //pc = new ProChooseed();
-        // String[] paras = pc.getPara(proId);
-        //GetParaId getParaId = new GetParaId();
-        //JSONObject object = Constants.alldata.get(proId);
-        //System.out.println(object);
+//        pc = new ProChooseed();
+//         String[] paras = pc.getPara(proId);
+//        GetParaId getParaId = new GetParaId();
+//        JSONObject object = Constants.alldata.get(proId);
+//        System.out.println(object);
         if(paras!=null) {
             GetSubString gs = new GetSubString();
             for (int i=0;i<paras.length;i++) {
