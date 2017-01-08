@@ -5,10 +5,8 @@ import com.yiweiyihangft.datamonitor.Constants;
 import java.util.Map;
 
 /**
- * Created by 32618 on 2016/12/25.
- * 根据工序ID 和测点名称 返回测点ID
+ * Created by 32618 on 2016/12/29.
  */
-
 public class GetParaId {
     public int getId(int proId,String str){
         if(Constants.promap!=null) {

@@ -8,4 +8,15 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="datetype">时间段</string>
+    <string name="showtype">测点:  </string>
+    <string-array name="datatypearray">
+    <item>10 minute</item>
+    <item>15 minute</item>
+    <item>20 minute</item>
+    <item>25 minute</item>
+    <item>30 minute</item>
+    <item>60 minute</item>
+    <item>600 minute</item>
+    </string-array>
 </resources>

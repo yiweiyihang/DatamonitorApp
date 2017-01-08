@@ -14,9 +14,8 @@ import com.yiweiyihangft.datamonitor.utils.ProChooseed;
 import java.util.List;
 
 /**
- * Created by 32618 on 2016/12/25.
+ * Created by 32618 on 2016/12/29.
  */
-
 public class MyPagerAdapter extends FragmentPagerAdapter {
     private int count;
     private Fragment[] fragments;
@@ -24,13 +23,14 @@ public class MyPagerAdapter extends FragmentPagerAdapter {
         super(fm);
         this.count=count;
         fragments = null;
-        GetProId gpi = new GetProId();
-        ProChooseed pc = new ProChooseed();
+        //System.out.println("*********dasfaefsdafa*****"+count);
+        GetProId mGetProID = new GetProId();
+        ProChooseed mProChooseed = new ProChooseed();
         fragments = new ListViewFragment[count];
         for(int i=0;i<count;i++) {//动态生成每个工序的测点表格
-            int proId = gpi.getId((String) prolist.get(i));
+            int proId = mGetProID .getId((String) prolist.get(i));
             //System.out.println(proId);
-            String[] paras = pc.getPara(proId);
+            String[] paras = mProChooseed.getPara(proId);
             Bundle b = new Bundle();
             b.putStringArray("paralist", paras);
             b.putInt("proId", proId);

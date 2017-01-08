@@ -3,8 +3,7 @@ package com.yiweiyihangft.datamonitor.utils;
 import com.yiweiyihangft.datamonitor.Constants;
 
 /**
- * Created by 32618 on 2016/12/25.
- * 获取工序名称对应的ID
+ * Created by 32618 on 2016/12/29.
  */
 
 public class GetProId {

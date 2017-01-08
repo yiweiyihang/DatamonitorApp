@@ -144,9 +144,9 @@ public class DataSetActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Constants.proItems = proItems;
-    }
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        Constants.proItems = proItems;
+//    }
 }

@@ -9,8 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ListView;
 
+import com.mobeta.android.dslv.DragSortListView;
 import com.yiweiyihangft.datamonitor.Adapter.MyAdapter;
 import com.yiweiyihangft.datamonitor.utils.GetParaId;
 import com.yiweiyihangft.datamonitor.utils.GetSubString;
@@ -26,31 +26,84 @@ import netRequest.FiveRequest;
 import netRequest.HttpResponse;
 import netRequest.NetTopListener;
 
+/**
+ * ShowData 显示多个测点的Page Fragment
+ */
 
 public class ListViewFragment extends Fragment {
     //private List<String[]> table;
     public MyAdapter myAdapter=new MyAdapter();
-    private ListView mylist;
+    private DragSortListView mylist;
     //static ListViewFragment listViewFragment;
     public int ProId;
     private String paradesc;
     private int paraId;
-    private String[] paras;
+    private String[] paras;  // 测点列表 未切分
     private GetParaId getParaId = new GetParaId();
     private ProChooseed pc = new ProChooseed();
     List<String[]> table1 =new ArrayList<String[]>();
-    //myAdapter=new MyAdapter();
+    private GetSubString mGegSubString = new GetSubString();
+
+    private DragSortListView.DropListener onDrop =
+            new DragSortListView.DropListener() {
+                @Override
+                public void drop(int from, int to) {
+                    String item=myAdapter.getItem(from);
+                    try{
+                        String[] item_apart = new String[]
+                                {mGegSubString.getParadesc(item),
+                                        Constants.alldata.get(ProId).getString(Integer.toString(getParaId.getId(ProId,item))),
+                                        mGegSubString.getParaunit(item)};
+                        myAdapter.notifyDataSetChanged();
+                        myAdapter.remove(from);
+                        myAdapter.insert(item_apart, to);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+
+                }
+            };
+
+    private DragSortListView.RemoveListener onRemove =
+            new DragSortListView.RemoveListener() {
+                @Override
+                public void remove(int which) {
+                    myAdapter.remove(which);
+                }
+            };
+
+    private DragSortListView.DragScrollProfile ssProfile =
+            new DragSortListView.DragScrollProfile() {
+                @Override
+                public float getSpeed(float w, long t) {
+                    if (w > 0.8f) {
+                        // Traverse all views in a millisecond
+                        return ((float) myAdapter.getCount()) / 0.001f;
+                    } else {
+                        return 10.0f * w;
+                    }
+                }
+            };
+
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.mylistview,container,false);
 
         //setContentView(R.layout.mylistview);
         // List<String[]> table=new ArrayList<String[]>();
+
+        mylist = (DragSortListView)rootView.findViewById(R.id.mylist);
+        mylist.setDropListener(onDrop);
+        mylist.setRemoveListener(onRemove);
+        mylist.setDragScrollProfile(ssProfile);
+
         table1.clear();
         String[] str;
         str =new String[]{"测点描述","测点值","单位"} ;
         table1.add(str);
         //myAdapter.setData(table);
+
+        // 从PageAdapter 获取测点列表和工序ID信息
         Bundle b =getArguments();
         paras  = b.getStringArray("paralist");
         ProId= b.getInt("proId");
@@ -58,14 +111,16 @@ public class ListViewFragment extends Fragment {
         //System.out.println("========"+ProId);
         //JSONObject object = Constants.alldata.get(proId);
         //System.out.println(object);
-        GetSubString mGetSubString = new GetSubString();
+
+        // 将测点描述进行切分
+
         if(paras!=null) {
             for (int i=0;i<paras.length;i++) {
 
                 try {
-                    table1.add(new String[]{mGetSubString.getParadesc(paras[i]),
+                    table1.add(new String[]{mGegSubString.getParadesc(paras[i]),
                             Constants.alldata.get(ProId).getString(Integer.toString(getParaId.getId(ProId,paras[i]))),
-                            mGetSubString.getParaunit(paras[i])});
+                            mGegSubString.getParaunit(paras[i])});
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -73,12 +128,15 @@ public class ListViewFragment extends Fragment {
 
             }
         }
-        mylist = (ListView) rootView.findViewById(R.id.mylist);
+//        mylist = (ListView) rootView.findViewById(R.id.mylist);
         myAdapter.setData(table1, paras, ProId);
         //  myAdapter.notifyDataSetChanged();
         mylist.setAdapter(myAdapter);
 
-        // 对List的每一个项目监听  用户点击后显示测点历史信息
+
+        /*
+         * 设置用户点击测点后的操作  显示线性图
+         */
         mylist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,  int position, long id) {
@@ -138,19 +196,20 @@ public class ListViewFragment extends Fragment {
         return rootView;
     }
 
-    /*
 
+    /*
+     * 更新数据
      */
     public void updateData(int proId){
         table1.clear();
         String[] str;
         str =new String[]{"测点描述","测点值","单位"} ;
         table1.add(str);
-//        pc = new ProChooseed();
-//         String[] paras = pc.getPara(proId);
-//        GetParaId getParaId = new GetParaId();
-//        JSONObject object = Constants.alldata.get(proId);
-//        System.out.println(object);
+        //pc = new ProChooseed();
+        // String[] paras = pc.getPara(proId);
+        //GetParaId getParaId = new GetParaId();
+        //JSONObject object = Constants.alldata.get(proId);
+        //System.out.println(object);
         if(paras!=null) {
             GetSubString gs = new GetSubString();
             for (int i=0;i<paras.length;i++) {

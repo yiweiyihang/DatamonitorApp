@@ -9,12 +9,14 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.yiweiyihangft.datamonitor.Adapter.MutipleChoiceAdapter;
+import com.yiweiyihangft.datamonitor.Adapter.MutipleChoiceAdapter.ViewHolder;
 
 /**
  * 自定义的带 全选/反选 功能的多选对话框
@@ -60,12 +62,12 @@ public class CustomMultipleChoiceView extends LinearLayout {
         bt_ok.setOnClickListener(l);
 
         // 绑定listView的监听器
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        lv.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position,
                                     long arg3) {
                 // 取得ViewHolder对象，这样就省去了通过层层的findViewById去实例化我们需要的cb实例的步骤
-                MutipleChoiceAdapter.ViewHolder holder = (MutipleChoiceAdapter.ViewHolder) arg1.getTag();
+                ViewHolder holder = (ViewHolder) arg1.getTag();
                 // 改变CheckBox的状态
                 holder.cb.toggle();
 //                Toast.makeText(getContext(), "选中这个！", Toast.LENGTH_SHORT).show();

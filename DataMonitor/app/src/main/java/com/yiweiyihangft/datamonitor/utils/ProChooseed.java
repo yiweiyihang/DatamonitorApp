@@ -7,8 +7,7 @@ import com.yiweiyihangft.datamonitor.Constants;
 import java.util.Map;
 
 /**
- * Created by 32618 on 2016/12/25.
- * 将工序ID信息Json包装
+ * Created by 32618 on 2016/12/29.
  */
 
 public class ProChooseed {
@@ -30,6 +29,7 @@ public class ProChooseed {
         if(Constants.promap!=null) {
             //System.out.println(Constants.promap.get(id));
             paraChoose = new String[Constants.promap.get(id).size()];
+
             for (Map.Entry<Integer, String> entry : Constants.promap.get(id).entrySet()) {
                 paraChoose[j] = entry.getValue();
                 j++;

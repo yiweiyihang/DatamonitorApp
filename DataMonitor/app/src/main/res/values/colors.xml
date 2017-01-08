@@ -11,4 +11,7 @@
     <color name="ShowDataBackground">#8C8C8C</color>
     <color name="ShowDataBackground2">#FCFCFC</color>
     <color name="TextColor">#5B5D5D</color>
+    <color name="background_tab_pressed">#6633B5E5</color>
+    <color name="ShowDataBackground3">#E3F2FD</color>
+    <color name="ShowDataTitle">#1565C0</color>
 </resources>
