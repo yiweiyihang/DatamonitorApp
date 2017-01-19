@@ -7,5 +7,8 @@
         <item name="colorPrimaryDark">#ff336699</item>
         <item name="colorAccent">#131314</item>
     </style>
+    <style name="noTitle" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="windowNoTitle">true</item>
+    </style>
 
 </resources>

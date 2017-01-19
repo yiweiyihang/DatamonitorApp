@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
 import com.mobeta.android.dslv.DragSortListView;
 import com.yiweiyihangft.datamonitor.Adapter.MyAdapter;
@@ -19,7 +20,6 @@ import com.yiweiyihangft.datamonitor.utils.ProChooseed;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import netRequest.BaseNetTopBusiness;
 import netRequest.FiveRequest;
@@ -32,6 +32,7 @@ import netRequest.NetTopListener;
 
 public class ListViewFragment extends Fragment {
     //private List<String[]> table;
+    final String  LOG_TAG = "ListViewFragment";
     public MyAdapter myAdapter=new MyAdapter();
     private DragSortListView mylist;
     //static ListViewFragment listViewFragment;
@@ -41,34 +42,29 @@ public class ListViewFragment extends Fragment {
     private String[] paras;  // 测点列表 未切分
     private GetParaId getParaId = new GetParaId();
     private ProChooseed pc = new ProChooseed();
-    List<String[]> table1 =new ArrayList<String[]>();
+    public ArrayList<String[]> table1 =new ArrayList<String[]>();  // 包含标题的测点信息列表(切分)
     private GetSubString mGegSubString = new GetSubString();
 
     private DragSortListView.DropListener onDrop =
             new DragSortListView.DropListener() {
                 @Override
                 public void drop(int from, int to) {
-                    String item=myAdapter.getItem(from);
-                    try{
-                        String[] item_apart = new String[]
-                                {mGegSubString.getParadesc(item),
-                                        Constants.alldata.get(ProId).getString(Integer.toString(getParaId.getId(ProId,item))),
-                                        mGegSubString.getParaunit(item)};
-                        myAdapter.notifyDataSetChanged();
-                        myAdapter.remove(from);
-                        myAdapter.insert(item_apart, to);
-                    }catch (Exception e){
-                        e.printStackTrace();
+                    String[] item_apart=myAdapter.getItemApart(from);  // 拖拽源的未切分测点信息
+
+                    myAdapter.notifyDataSetChanged();
+                    myAdapter.remove(from);
+                    myAdapter.insert(item_apart, to);
                     }
 
-                }
             };
 
     private DragSortListView.RemoveListener onRemove =
             new DragSortListView.RemoveListener() {
                 @Override
                 public void remove(int which) {
-                    myAdapter.remove(which);
+//                    myAdapter.remove(which);
+                    Toast.makeText(getContext(),"remove",Toast.LENGTH_SHORT).show();
+
                 }
             };
 
@@ -98,9 +94,9 @@ public class ListViewFragment extends Fragment {
         mylist.setDragScrollProfile(ssProfile);
 
         table1.clear();
-        String[] str;
-        str =new String[]{"测点描述","测点值","单位"} ;
-        table1.add(str);
+//        String[] str;
+//        str =new String[]{"测点描述","测点值","单位"} ;
+//        table1.add(str);
         //myAdapter.setData(table);
 
         // 从PageAdapter 获取测点列表和工序ID信息
@@ -132,6 +128,8 @@ public class ListViewFragment extends Fragment {
         myAdapter.setData(table1, paras, ProId);
         //  myAdapter.notifyDataSetChanged();
         mylist.setAdapter(myAdapter);
+        mylist.setDragEnabled(true);
+
 
 
         /*
@@ -202,9 +200,9 @@ public class ListViewFragment extends Fragment {
      */
     public void updateData(int proId){
         table1.clear();
-        String[] str;
-        str =new String[]{"测点描述","测点值","单位"} ;
-        table1.add(str);
+//        String[] str;
+//        str =new String[]{"测点描述","测点值","单位"} ;
+//        table1.add(str);
         //pc = new ProChooseed();
         // String[] paras = pc.getPara(proId);
         //GetParaId getParaId = new GetParaId();

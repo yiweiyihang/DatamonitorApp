@@ -161,7 +161,7 @@ public class ShowDataActivity extends AppCompatActivity {
                 }
             }
         };
-        mTimer.schedule(mTimerTask,5000,Integer.parseInt(Constants.frequency)*1000);
+        mTimer.schedule(mTimerTask,2000,Integer.parseInt(Constants.frequency)*1000);
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
