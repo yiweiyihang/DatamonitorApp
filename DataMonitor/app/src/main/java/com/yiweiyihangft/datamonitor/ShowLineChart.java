@@ -42,7 +42,6 @@ public class ShowLineChart extends AppCompatActivity {
         Toast.makeText(ShowLineChart.this,"show linechart",Toast.LENGTH_SHORT).show();
         datespinner = (Spinner) findViewById(R.id.spinner2);
         Paradesc = (TextView)findViewById(R.id.Paradesc);
-
         Intent intent = this.getIntent();
         Bundle b = intent.getExtras();
         final int proId = b.getInt("proID");

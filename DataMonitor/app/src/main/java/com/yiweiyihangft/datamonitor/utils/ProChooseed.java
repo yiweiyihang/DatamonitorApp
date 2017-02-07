@@ -24,6 +24,12 @@ public class ProChooseed {
         }
         return null;
     }
+
+    /**
+     * 获取测点列表
+     * @param id  工序ID
+     * @return  测点表格(字符串数组)
+     */
     public String[] getPara(int id) {
         int j = 0;
         if(Constants.promap!=null) {

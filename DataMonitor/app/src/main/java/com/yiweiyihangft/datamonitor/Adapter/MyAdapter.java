@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.yiweiyihangft.datamonitor.Constants;
 import com.yiweiyihangft.datamonitor.R;
-import com.yiweiyihangft.datamonitor.utils.GetParaId;
 
 import java.util.ArrayList;
 
@@ -31,46 +30,56 @@ public class MyAdapter extends BaseAdapter {
     private TextView unit ;
     private ImageView drag_image;
 
-
+    /**
+     * 构造函数
+     */
     public MyAdapter( ) {
         this.context= Constants.context;
         this.mInflater = LayoutInflater.from(this.context);//动态载入界面
     }
 
+    /**
+     *  初始化Adapter要显示的信息
+     * @param data  切分后的测点列表
+     * @param data1  测点信息列表(未切分)  包含名称和单位 eg: 3.2MPa蒸汽流量(t/h)
+     * @param proid  工序ID
+     */
+    public void setData(ArrayList<String[]> data,String[] data1,int proid){
+        this.table=data;  // table 切分后测点列表
+        this.data = data1;   // 测点信息列表 每一条都未切分
+        this.proid = proid;
+        // System.out.println("table.size = "+table.size());
+    }
+
+    /**
+     * 返回测点信息总数
+     * @return
+     */
     @Override
     public int getCount() {
         return table.size();
     }
 
+    /**
+     * 返回用户选择测点的未切分测点信息
+     * @param position
+     * @return
+     */
     @Override
     public String getItem(int position) {
-        if(position==0){
-            return null;
-        }
-        return data[position-1];
+        return data[position];
     }
 
     public String[] getItemApart(int position){
-        if(position == 0){
-            return null;
-        }
         return table.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        if(position==0){
-            return 0;
-        }
-        GetParaId getParaId = new GetParaId();
-        return getParaId.getId(proid,data[position-1]);
+
+       return (position + 1);
     }
-    public void setData(ArrayList<String[]> data,String[] data1,int proid){
-        this.table=data;  // table 切分后带标题的测点列表
-        this.data = data1;   // 测点信息列表 每一条都未切分
-        this.proid = proid;
-        // System.out.println("table.size = "+table.size());
-    }
+
 
     @Override
     public View getView(int position, View contentView, ViewGroup parent){

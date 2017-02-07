@@ -38,7 +38,7 @@ public class ListViewFragment extends Fragment {
     //static ListViewFragment listViewFragment;
     public int ProId;
     private String paradesc;
-    private int paraId;
+    private long paraId;
     private String[] paras;  // 测点列表 未切分
     private GetParaId getParaId = new GetParaId();
     private ProChooseed pc = new ProChooseed();
@@ -104,16 +104,12 @@ public class ListViewFragment extends Fragment {
         paras  = b.getStringArray("paralist");
         ProId= b.getInt("proId");
 
-        //System.out.println("========"+ProId);
-        //JSONObject object = Constants.alldata.get(proId);
-        //System.out.println(object);
-
-        // 将测点描述进行切分
-
+        // 将测点描述信息进行切分
         if(paras!=null) {
             for (int i=0;i<paras.length;i++) {
 
                 try {
+                    // 添加测点名称，测点值，测点单位到table中
                     table1.add(new String[]{mGegSubString.getParadesc(paras[i]),
                             Constants.alldata.get(ProId).getString(Integer.toString(getParaId.getId(ProId,paras[i]))),
                             mGegSubString.getParaunit(paras[i])});
@@ -125,6 +121,8 @@ public class ListViewFragment extends Fragment {
             }
         }
 //        mylist = (ListView) rootView.findViewById(R.id.mylist);
+
+        // 初始化Adapter要显示的信息
         myAdapter.setData(table1, paras, ProId);
         //  myAdapter.notifyDataSetChanged();
         mylist.setAdapter(myAdapter);
@@ -136,20 +134,25 @@ public class ListViewFragment extends Fragment {
          * 设置用户点击测点后的操作  显示线性图
          */
         mylist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            /**
+             * 监测测点单项的点击
+             * @param parent
+             * @param view
+             * @param position
+             * @param id
+             */
             @Override
             public void onItemClick(AdapterView<?> parent, View view,  int position, long id) {
-                System.out.println("**********");
-                System.out.println(position);
-                System.out.println(id);
-                paradesc = (String) myAdapter.getItem(position);
-                paraId = position;
-                System.out.println(paradesc);
-                System.out.println("**********");
-                //proId = position;
+                // 获得 测点信息描述  eg:3.2MPa蒸汽流量(t/h)
+                paradesc = myAdapter.getItem(position);
+                // 获得测点对应ID
+                paraId = myAdapter.getItemId(position);
+                // 发送测点时间序列显示请求
                 FiveRequest aRequest = new FiveRequest();
                 aRequest.proID = Integer.toString(ProId);
-                aRequest.paraID = Integer.toString(position);
+                aRequest.paraID = Long.toString(paraId);
                 aRequest.timeSpace = "10";
+                // 发送请求 根据返回的信息回调函数
                 BaseNetTopBusiness baseNetTopBusiness = new BaseNetTopBusiness(new NetTopListener() {
                     @Override
                     public void onSuccess(HttpResponse response) {
@@ -159,18 +162,19 @@ public class ListViewFragment extends Fragment {
                             String str = new String(bytes, "gbk");
                             JSONObject object = new JSONObject(str);
                             Constants.historydata = object;
-                            // System.out.println("********************--------");
-                            // System.out.println(object);
 
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+                        // 新建 时间序列显示Intent
                         Intent i = new Intent(getActivity(),ShowLineChart.class);
+                        // 打包测点描述 工序ID 测点ID 信息
                         Bundle b = new Bundle();
                         b.putString("paradesc", paradesc);
                         b.putInt("proID", ProId);
-                        b.putInt("paraID", paraId);
+                        b.putLong("paraID", paraId);
                         i.putExtras(b);
+                        // 转到 时间序列显示
                         startActivity(i);
 
                     }
@@ -186,6 +190,7 @@ public class ListViewFragment extends Fragment {
                     }
 
                 });
+                // 发送网络请求
                 baseNetTopBusiness.startRequest(aRequest);
 
 
@@ -195,8 +200,9 @@ public class ListViewFragment extends Fragment {
     }
 
 
-    /*
+    /**
      * 更新数据
+     * @param proId  工序对应ID
      */
     public void updateData(int proId){
         table1.clear();

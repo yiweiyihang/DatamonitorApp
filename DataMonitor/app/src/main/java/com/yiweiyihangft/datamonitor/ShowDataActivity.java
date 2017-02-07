@@ -79,6 +79,7 @@ public class ShowDataActivity extends AppCompatActivity {
                                 proTime.setTextColor(Color.GREEN);
                                 proTime.setTextSize(16);
                             }
+                            // 绑定页面适配器
                             myPagerAdapter = new MyPagerAdapter(count, Constants.proChoose, getSupportFragmentManager());
 //                            System.out.println("---------");
 //                            System.out.println(Constants.alldata);
@@ -104,12 +105,19 @@ public class ShowDataActivity extends AppCompatActivity {
             baseNetTopBusiness.startRequest(dataRequest);
         }
         if (Constants.proChoose != null && Constants.proChoose.size() >= 1) {
+            // 默认显示第一个工序名称
             proName.setText(Constants.proChoose.get(0));
+            // 设置工序显示字体
             proName.setTextSize(16);
+            // 设置工序显示颜色
             proName.setTextColor(Color.RED);
         }
-        mTimer = new Timer();
 
+        /**
+         * 定时器根据用户频率设定发送请求
+         */
+        mTimer = new Timer();
+        // 设定定时器任务
         mTimerTask = new TimerTask() {
             @Override
             public void run() {
@@ -161,13 +169,21 @@ public class ShowDataActivity extends AppCompatActivity {
                 }
             }
         };
+        // 读取用户频率设定 定时器任务绑定
         mTimer.schedule(mTimerTask,2000,Integer.parseInt(Constants.frequency)*1000);
+        /**
+         * 设定用户滑动页面的操作
+         */
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
             }
 
+            /**
+             * 设置当前页面的显示格式
+             * @param position 当前页面索引值
+             */
             @Override
             public void onPageSelected(final int position) {
                 // GetProId gpi = new GetProId();
@@ -187,6 +203,9 @@ public class ShowDataActivity extends AppCompatActivity {
 
     }
 
+    /**
+     *  设定当前活动停止时的操作
+     */
     @Override
     protected void onStop() {
         super.onPause();
