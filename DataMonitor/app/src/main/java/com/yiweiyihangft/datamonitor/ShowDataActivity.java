@@ -1,6 +1,7 @@
 package com.yiweiyihangft.datamonitor;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -22,6 +23,8 @@ import netRequest.DataRequest;
 import netRequest.HttpResponse;
 import netRequest.NetTopListener;
 
+import static com.yiweiyihangft.datamonitor.Constants.context;
+
 public class ShowDataActivity extends AppCompatActivity {
     private TextView proName;
     private TextView proTime;
@@ -35,11 +38,17 @@ public class ShowDataActivity extends AppCompatActivity {
     private  ProChooseed pc = new ProChooseed();
     private int proId;
 
+    /**
+     * 用户频率设置
+     */
+    private SharedPreferences sp ;
+    private String frequency = null ;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_data);
-        Constants.context=this;
+        context=this;
         // System.out.println("************************---------");
         pager = (ViewPager) findViewById(R.id.pagers);
         Intent intent = this.getIntent();
@@ -50,7 +59,12 @@ public class ShowDataActivity extends AppCompatActivity {
         proTime = (TextView) findViewById(R.id.proTime);
         Constants.alldata.clear();
         Constants.timemap.clear();
-//        final GetProId getProId = new GetProId();
+        sp = getSharedPreferences("Myproject",0);
+        frequency = sp.getString("frequency","");
+        if (!frequency.equals("")) {
+            Constants.frequency = frequency;
+        }
+
 //        final ProChooseed pc = new ProChooseed();
         for(i=0;i<Constants.proChoose.size();i++) {
             DataRequest dataRequest = new DataRequest();
@@ -169,8 +183,10 @@ public class ShowDataActivity extends AppCompatActivity {
                 }
             }
         };
+
         // 读取用户频率设定 定时器任务绑定
-        mTimer.schedule(mTimerTask,2000,Integer.parseInt(Constants.frequency)*1000);
+        int frequencySet = Integer.parseInt(Constants.frequency) * 1000;
+        mTimer.schedule(mTimerTask,frequencySet,frequencySet);
         /**
          * 设定用户滑动页面的操作
          */

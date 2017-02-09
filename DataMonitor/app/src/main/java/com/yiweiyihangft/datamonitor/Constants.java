@@ -26,7 +26,7 @@ public class Constants {
     // Integer：测点ID   String：测点名称
     public static Map<Integer,String> paramap = new LinkedHashMap<>();
     public static String UserName;
-    public static String frequency = "10000";
+    public static String frequency = "15";
 
     public static JSONObject dataObject;   //存取返回的数据json 对象
 

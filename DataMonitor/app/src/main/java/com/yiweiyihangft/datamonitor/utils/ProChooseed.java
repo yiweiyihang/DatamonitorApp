@@ -11,19 +11,30 @@ import java.util.Map;
  */
 
 public class ProChooseed {
+    /**
+     * 用户选择的工序
+     */
     private String[] proChoose;
+    /**
+     * 用户选择的测点
+     */
     private String[] paraChoose;
     private int i = 0;
-    public String[] getPro(){
-        if(Constants.promap!=null) {
-            for (Map.Entry<Integer, Map<Integer, String>> entry : Constants.promap.entrySet()) {
-                proChoose[i] = Constants.proItems[entry.getKey()];
-                i++;
-            }
-            return proChoose;
-        }
-        return null;
-    }
+
+//    /**
+//     * 获取用户选择的工序
+//     * @return
+//     */
+//    public String[] getPro(){
+//        if(Constants.promap!=null) {
+//            for (Map.Entry<Integer, Map<Integer, String>> entry : Constants.promap.entrySet()) {
+//                proChoose[i] = Constants.proItems[entry.getKey()];
+//                i++;
+//            }
+//            return proChoose;
+//        }
+//        return null;
+//    }
 
     /**
      * 获取测点列表
@@ -44,6 +55,12 @@ public class ProChooseed {
         }
         return null;
     }
+
+    /**
+     * 获取返回的测点ID对应的Json数据
+     * @param proid
+     * @return
+     */
     public JsonObject getParaIdJson(int proid) {
         if(Constants.promap!=null) {
             //System.out.println(Constants.promap.get(proid));
@@ -63,15 +80,15 @@ public class ProChooseed {
         return null;
     }
 
-    public String[] getProChoose(){
-        if(Constants.promap!=null) {
-            proChoose = new String[Constants.proChoose.size()];
-            for (int i = 0; i < Constants.proChoose.size(); i++) {
-                proChoose[i] = Constants.proChoose.get(i);
-            }
-            return proChoose;
-        }else{
-            return null;
-        }
-    }
+//    public String[] getProChoose(){
+//        if(Constants.promap!=null) {
+//            proChoose = new String[Constants.proChoose.size()];
+//            for (int i = 0; i < Constants.proChoose.size(); i++) {
+//                proChoose[i] = Constants.proChoose.get(i);
+//            }
+//            return proChoose;
+//        }else{
+//            return null;
+//        }
+//    }
 }

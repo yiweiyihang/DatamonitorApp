@@ -20,7 +20,7 @@ public class UserSetActivity extends AppCompatActivity {
     private Button change_submit;
     private Button frequencySet_bt;
     private EditText frequency_edit;
-    private SharedPreferences sp;
+    private SharedPreferences sp,spSet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,9 +38,15 @@ public class UserSetActivity extends AppCompatActivity {
         change_submit = (Button) findViewById(R.id.change_submit);
         sp = getSharedPreferences("Myproject",0);
         String frequency = sp.getString("frequency","");
+
+        // 保存用户频率偏好设置
         if (!frequency.equals("")) {
             frequency_edit.setText(frequency);
             Constants.frequency = frequency;
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putString("frequency",frequency);
+            editor.commit();
+
         }
 
         // 监听频率设置确认按钮

@@ -12,7 +12,7 @@ public class GetSubString {
      * @param str  对应测点信息字符串 eg: 3.2MPa蒸汽流量(t/h)
      * @return  测点名称字符串
      */
-    public String getParadesc(String str){
+    public static String getParadesc(String str){
         if(str!=null) {
             if(str.contains("(")) {
                 String[] ss = str.split("\\(");
@@ -30,7 +30,7 @@ public class GetSubString {
      * @param str  测点信息字符串 eg: 3.2MPa蒸汽流量(t/h)
      * @return  测点单位字符串
      */
-    public String getParaunit(String str){
+    public static String getParaunit(String str){
         if(str!=null) {
             if(str.contains("(")) {
                 String[] ss = str.split("\\(");
