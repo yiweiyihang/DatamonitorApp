@@ -225,7 +225,9 @@ public class ShowDataActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onPause();
+        // 消除定时器任务
         mTimer.cancel();
+        //清除选择的测点
         Constants.paramap.clear();
     }
 }

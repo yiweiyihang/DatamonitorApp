@@ -19,40 +19,88 @@ import netRequest.HttpResponse;
 import netRequest.NetTopListener;
 import netRequest.firstRequest;
 
+/**
+ * 用户登录初始页面
+ *
+ */
+
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
+    /**
+     * 标记
+     */
     final String LOG_TAG = "LoginActivity";
-    /*
-     * 定义各种变量
+    /**
+     * 用户登录名输入框
      */
     private EditText login_username;
+    /**
+     * 用户密码输入框
+     */
     private EditText login_password;
-    private EditText login_url;
+//    private EditText login_url;
+    /**
+     * IP设置按钮
+     */
     private Button ipsetbtn;
+    /**
+     * 登录按钮
+     */
     private Button user_login_button;
+    /**
+     * 注册按钮
+     */
     private Button user_register_button;
+    /**
+     * 用户密码可见按钮(眼睛)
+     */
     private Button bt_pwd_eye;
+    /**
+     * 清除用户名按钮(叉子)
+     */
     private Button bt_username_clear;
+    /**
+     * 记住密码选框
+     */
     private CheckBox userPswd_CheckB;
-    private SharedPreferences sp;
+    /**
+     * SharedPreferences 存储
+     */
+    private SharedPreferences mSharedPreferences;
     private String my_ip;
+    /**
+     * 用户名
+     */
     private String my_name;
+    /**
+     * 用户密码
+     */
     private String my_pswd;
-    private boolean flag;     // 判断是否保存用户名和密码
+    /**
+     * 保存用户名密码标志
+     */
+    private boolean isSavedFlag;     // 判断是否保存用户名和密码
 
+    /**
+     * 创建Activity
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
+        // 绑定页面
         setContentView(R.layout.activity_login);
+        //初始化登录页面
         initView();
     }
 
-    /*
+    /**
      * 初始化登录页面
      */
     private void initView() {
+        // 关联页面元素
         login_username = (EditText) findViewById(R.id.username_edit);
         login_password = (EditText) findViewById(R.id.password_edit);
         userPswd_CheckB = (CheckBox) findViewById(R.id.save_psw_checkB);
@@ -62,20 +110,28 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         bt_pwd_eye = (Button) findViewById(R.id.bt_pwd_eye);
         bt_username_clear = (Button) findViewById(R.id.bt_username_clear);
 
-        sp = getSharedPreferences("MyProject", 0);   // 读取用户偏好设置
-        String ip = sp.getString("ip", "");
-        String port = sp.getString("port", "");
-        Constants.Url = ip + ":" + port;     // Build URL
-        String name = sp.getString("name", "");     // (String key, String default_value)
-        String pswd = sp.getString("pswd", "");
-        flag = sp.getBoolean("flag", false);
-        userPswd_CheckB.setChecked(flag);
+        // 利用Context类中的 getSharedPreferences()方法获得SharedPreferences对象
+        mSharedPreferences = getSharedPreferences("MyProject", 0);
+        // 读取用户IP设置
+        String ip = mSharedPreferences.getString("ip", "");
+        // 读取用户端口设置
+        String port = mSharedPreferences.getString("port", "");
+        // 将Url(IP + 端口)保存到数据源中
+        Constants.Url = ip + ":" + port;
+        // 读取用户名  get方法两个参数：键 & 默认值
+        String name = mSharedPreferences.getString("name", "");
+        // 读取密码
+        String pswd = mSharedPreferences.getString("pswd", "");
+        // 读取记住密码选择
+        isSavedFlag = mSharedPreferences.getBoolean("flag", false);
+        // 选框显示记住密码选择状态
+        userPswd_CheckB.setChecked(isSavedFlag);
 
-        // 判断是否有之前存储的用户账号保存 如有 显示在页面中
-        if (!name.equals("") && flag == true) {
+        // 显示之前保存的用户名和密码
+        if (!name.equals("") && isSavedFlag == true) {
             login_username.setText(name);
         }
-        if (!pswd.equals("") && flag == true) {
+        if (!pswd.equals("") && isSavedFlag == true) {
             login_password.setText(pswd);
         }
 
@@ -86,13 +142,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         bt_pwd_eye.setOnClickListener(this);
         bt_username_clear.setOnClickListener(this);
 
-
         // 监听EditText的用户名是否被更改
         login_username.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                // 若用户名发生更改 获取用户名
+                // 若用户名发生更改 读取用户名
                 if (!hasFocus) {
                     String username = login_username.getText().toString().trim();
                     // 判断用户名长度 违反要求则弹出Toast提示
@@ -101,7 +156,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     }
                 }
             }
-
         });
 
         // 监听EditText密码是否被更改
@@ -126,58 +180,50 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    flag= true;   // 选中则flag为true保存密码
+                    isSavedFlag = true;   // 选中则flag为true保存密码
 
                 } else {
-                    flag = false;
+                    isSavedFlag = false;
                 }
             }
         });
     }
 
 
-    /*
-     * 判断哪个button被点击
+    /**
+     * 处理 button 点击
+     * @param view
      */
     @Override
     public void onClick(View view) {
 
         switch (view.getId()) {
-            /*
-             用户点击登录按钮执行的操作
-             */
+            // 用户点击登录按钮
             case R.id.login_bt:
                 if (checkEdit()) {         // 检查用户密码EditText是否有效 返回布尔值
                     login();               //处理用户登录操作
                 }
                 break;
-            /*
-             用户点击注册按钮执行的操作
-             */
+            // 用户点击注册按钮
             case R.id.register_bt:
                 // 发送显示Intent 进入用户注册Activity
                 Intent i = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(i);
                 break;
-            /*
-             用户点击IP设置 创建IpSetDialog对象
-             */
-            case R.id.iP_set_bt:   //
+            // 用户点击IP设置 创建IpSetDialog对象
+            case R.id.iP_set_bt:
                 IpSetDialog ipSetDialog = new IpSetDialog(this);
+                // 显示IP设置对话框
                 ipSetDialog.getDialog();
                 Log.v(LOG_TAG,"IP设置");
                 break;
-            /*
-             清除用户名及密码
-             */
+            // 清除用户名及密码
             case R.id.bt_username_clear:
                 login_username.setText("");
                 login_password.setText("");
                 Log.v(LOG_TAG,"清除用户信息");
                 break;
-            /*
-             设置密码的可见性
-             */
+            // 设置密码的可见性
             case R.id.bt_pwd_eye:
                 if (login_password.getInputType() == (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD)) {
                     bt_pwd_eye.setBackgroundResource(R.drawable.bt_eye_on);
@@ -191,9 +237,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    /*
-    检查用户名和密码是否为空  返回一个布尔值
-    */
+
+    /**
+     * 检查用户名和密码是否为空  返回一个布尔值
+     * @return
+     */
     private boolean checkEdit() {
         if (login_username.getText().toString().trim().equals("")) {
             Toast.makeText(LoginActivity.this, "用户名不能为空", Toast.LENGTH_SHORT).show();
@@ -205,19 +253,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         return false;
     }
 
-    /*
-    处理用户登录操作
+    /**
+     * 处理用户登录操作
      */
     private void login() {
-
+        // 新建第一类请求对象
         firstRequest arequest = new firstRequest();
 
-        // 读入登录页面的用户信息和密码
-        // 填充Request所需的信息
-        arequest.uname = login_username.getText().toString().trim();   // trim():去掉字符串首尾的空格
+        // 读入登录页面的用户信息和密码 填充Request所需的信息
+        // trim():去掉字符串首尾的空格
+        arequest.uname = login_username.getText().toString().trim();
         arequest.upwd = login_password.getText().toString().trim();
+        // 保存用户名和密码
         my_name = login_username.getText().toString();
         my_pswd = login_password.getText().toString();
+        // 标志登录操作
         arequest.flag = "log";    // flag标志用来表示对数据库user表的登录操作
 
         /*
@@ -225,30 +275,32 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         BaseNetTopBusiness 负责与Web服务器连接 发送请求 待看！！
          */
         BaseNetTopBusiness baseNetTopBusiness = new BaseNetTopBusiness(new NetTopListener() {
-
-            /*
-             * 连接成功的处理
-             */
             @Override
+            // 连接成功
             public void onSuccess(HttpResponse response) {
+                /*********调试专用**********/
                 System.out.println("成功");
                 String s = new String(response.bytes);
                 System.out.println(s);
+                /*********调试专用**********/
 
                 // 判断用户登录是否成功
                 if (s.equals("success") ) {
                     Toast.makeText(LoginActivity.this, "登录成功！", Toast.LENGTH_SHORT).show();
-                    SharedPreferences.Editor editor = sp.edit();  // 编辑用户偏好设置
-                    Constants.UserName = my_name;    //保存用户名
+                    // 存储用户信息数据
+                    SharedPreferences.Editor editor = mSharedPreferences.edit();
+                    //向数据源中保存用户名
+                    Constants.UserName = my_name;
 
-                    // 如果登陆成功 用户选择记住密码  则将输入的用户信息存入SharedPreference中
-                    if(flag){
+                    // 如果登陆成功且用户选择记住密码  则将用户信息填入SharedPreference中
+                    if(isSavedFlag){
                         editor.putString("name",my_name);
                         editor.putString("pswd",my_pswd);
                     }
-                    editor.putBoolean("flag", flag);   // 将用户密码已保存标志存入SharedPreference
-                    editor.commit();     // 提交用户偏好设置信息
-
+                    // 存储用户记住密码状态标志
+                    editor.putBoolean("flag", isSavedFlag);
+                    // 提交数据
+                    editor.commit();
                     // 发送显示Intent  切换到ActionBarActivity
                     Intent intent = new Intent(LoginActivity.this, WelcomeActivity.class);
                     startActivity(intent);
@@ -257,9 +309,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 }
             }
 
-            /*
-             * 连接失败的处理
-             */
+            // 连接失败的处理
             @Override
             public void onFail() {
                 System.out.println("on fail");
@@ -274,13 +324,4 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         // 发送Request连接请求
         baseNetTopBusiness.startRequest(arequest);
     }
-
-
-//    private void login() {
-//        Toast.makeText(LoginActivity.this, "登录！", Toast.LENGTH_SHORT).show();
-//        Toast.makeText(LoginActivity.this, login_username.getText().toString(), Toast.LENGTH_SHORT).show();
-//        Toast.makeText(LoginActivity.this, login_password.getText().toString(), Toast.LENGTH_SHORT).show();
-//        Intent welcomeI = new Intent(LoginActivity.this,WelcomeActivity.class);
-//        startActivity(welcomeI);
-//    }
 }
