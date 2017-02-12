@@ -22,41 +22,74 @@ import netRequest.SecondRequest;
  */
 public class DataSetActivity extends AppCompatActivity {
 
+    /**
+     * 标记
+     */
     final String LOG_TAG = "DataSetActivity";
-    private int[] countClick;    // 每个工序被点选的次数
-    private String[] proItems;   // 所有工序名称组成的数组
-    private Dialog dialog ;      // 选择工序名称后显示的对话框
-    CheckBox checkBox;
-    OnClick on=new OnClick();
     private View rootView;
+    /**
+     * 每个工序条被点选的次数
+     */
+    private int[] countClick;
+    /**
+     * 工序名称列表
+     */
+    private String[] proItems;
+    /**
+     * 工序选择状态
+     */
+    private boolean[] isProSelected;
+    /**
+     * 选择工序名称后的测点选择对话框
+     */
+    private Dialog dialog;
+    /**
+     * 选框
+     */
+    CheckBox checkBox;
+    /**
+     * 选框监听器
+     */
+    OnClick on = new OnClick();
+    /**
+     * 工序选择确定按钮
+     */
     private Button setConfirm_bt;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // 生成页面并绑定
         rootView = View.inflate(this, R.layout.activity_data_set, null);
         setContentView(rootView);
-        setConfirm_bt = (Button)findViewById(R.id.set_confirm_bt);
-        sendRequest();   // 发送读取工序申请  显示所有可供选择的工序
+        //关联页面元素
+        setConfirm_bt = (Button) findViewById(R.id.set_confirm_bt);
+        // 初始化工序显示页面 发送读取工序申请  返回所有可供选择的工序并显示在页面上
+        iniView();
 
-        /*
-         监听配置完成按钮
-         */
+        // 监听配置完成按钮
         setConfirm_bt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Constants.proItems = proItems;   // 存取所有工序名称
-                if(Constants.proChoose!=null&&countClick!=null) {
+                // 存储所有工序名称
+                Constants.proItems = proItems;
+                Constants.isProSelected = isProSelected;
+                if (Constants.proChoose != null && countClick != null) {
                     // 清空缓存
                     Constants.proChoose.clear();
-                    for (int i = 0; i < countClick.length; i++) {
-                        //统计被选择的工序
-                        // 如被选中 存储用户选择的工序名称
-                        // 如未被选中 清空本地存储的工序名称
-                        if (countClick[i] % 2 != 0) {
-                            //System.out.println(proItems[i]);
+                    //统计被选择的工序
+                    for (int i = 0; i < proItems.length; i++) {
+                        // 判断是否该工序是否被选中
+                        if (countClick[i] % 2 != 0) {   // 该工序选中
+                            // 存储用户选择工序名称
                             Constants.proChoose.add(proItems[i]);
-                        }else {
-                            if (Constants.promap.get(i)!=null){    // 如果对应的i中工序名称不为空
+                            // 设置该工序选择状态为true
+                            Constants.isProSelected[i] = true;
+                        } else {      // 该工序未被选中
+                            // 判断该工序是否选择过测点
+                            if (Constants.promap.get(i) != null) {
+                                // TODO 清除未选择工序的测点Map缓存
                                 Constants.promap.remove(i);
                             }
                         }
@@ -68,17 +101,18 @@ public class DataSetActivity extends AppCompatActivity {
                     i.putExtras(bundle);
                     i.setClass(DataSetActivity.this, ShowDataActivity.class);
                     startActivity(i);
-                }else{
-                    Toast.makeText(DataSetActivity.this,"您还没有选择工序!",Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(DataSetActivity.this, "您还没有选择工序!", Toast.LENGTH_LONG).show();
                 }
             }
         });
     }
 
-    /*
-      发送读取工序申请  显示所有可供选择的工序
+    /**
+     * 初始化工序显示你页面
+     * 发送读取工序申请  显示所有可供选择的工序
      */
-    private void sendRequest(){
+    private void iniView() {
         // SecondRequest 申请得到所有的工序信息
         SecondRequest arequest = new SecondRequest();
         BaseNetTopBusiness baseNetTopBusiness = new BaseNetTopBusiness(new NetTopListener() {
@@ -87,22 +121,30 @@ public class DataSetActivity extends AppCompatActivity {
                 System.out.println("成功");
                 LinearLayout ll = (LinearLayout) rootView.findViewById(R.id.checkboxID);
                 ll.removeAllViews();
+                // 获得返回字节
                 byte[] bytes = response.bytes;
+                // 显示工序列表
                 try {
                     String str = new String(bytes, "gbk");
                     JSONObject object = new JSONObject(str);
-                    countClick = new int[object.length()];
-                    proItems = new String[object.length()];
+                    countClick = new int[object.length()];    //工序点选次数数组
+                    proItems = new String[object.length()];    // 工序名称数组
+                    isProSelected = new boolean[object.length()];  // 工序选择状态数组
+                    // 逐条显示工序
                     for (int i = 0; i < object.length(); i++) {
-                        //动态添加到已有布局
+                        // 动态添加到已有布局
                         checkBox = new CheckBox(DataSetActivity.this);
+                        // 获取工序名称
                         String s = object.getString(Integer.toString(i));
                         proItems[i] = s;
                         // 设置工序显示的字体 宽度等
                         checkBox.setText(s);
                         checkBox.setTextSize(20);
+                        // 显示工序选择状态
+                        checkBox.setChecked(isProSelected[i]);
 //                        checkBox.setTextColor(getResources().getColor(R.color.TextColor));
                         checkBox.setId(i);
+                        // 监听选框点击事件
                         checkBox.setOnClickListener(on);
                         checkBox.setHeight(120);
                         // 动态添加到布局中
@@ -127,18 +169,21 @@ public class DataSetActivity extends AppCompatActivity {
     }
 
 
-    //监听选择的工序  用户选择工序后显示对话框
-    class  OnClick implements View.OnClickListener
-    {
+    //监听选择工序选框  用户选择工序后显示对话框
+    class OnClick implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            countClick[v.getId()]++;//记录各个工序点击次数
-            Log.v(LOG_TAG,Integer.toString(countClick.length));
+            countClick[v.getId()]++;  //记录各个工序点击次数
+            /********** 调试专用 *************/
+            Log.v(LOG_TAG, Integer.toString(countClick.length));
             System.out.println(v.getId());
             System.out.println(countClick[v.getId()]);
-            if(countClick[v.getId()]%2!=0){//点击次数为奇数则弹出对话框
-                // System.out.println("测点");
-                dialog = new Dialog(DataSetActivity.this,rootView);
+            /********** 调试专用 *************/
+            //点击次数为奇数 弹出测点选择对话框
+            if (countClick[v.getId()] % 2 != 0) {
+                // 创建测点显示对话框
+                dialog = new Dialog(DataSetActivity.this, rootView);
+                // 显示工序ID对应的测点列表
                 dialog.getDialog(v.getId());
             }
         }

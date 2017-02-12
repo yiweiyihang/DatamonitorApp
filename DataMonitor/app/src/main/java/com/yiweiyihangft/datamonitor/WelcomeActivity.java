@@ -12,56 +12,71 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * 用户欢迎页面
+ */
+
 public class WelcomeActivity extends AppCompatActivity {
     private static final int msgKey1 = 1;
+    /**
+     * 时间显示
+     */
     private TextView mTime;
+    /**
+     * 用户设置按钮
+     */
     private Button mUserSetBt;
+    /**
+     * 数据监测按钮
+     */
     private Button mDataMonitorBt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+        // 初始化欢迎页面
         initView();
     }
 
-    /*
-     初始化欢迎界面
+    /**
+     * 初始化欢迎界面
      */
     private void initView() {
+        // 关联页面元素
         mTime = (TextView) findViewById(R.id.data_show_text);
+        mUserSetBt = (Button) findViewById(R.id.userSet_bt);
+        mDataMonitorBt = (Button) findViewById(R.id.dataMonitor_bt);
+        // 获得当前时间
         SimpleDateFormat formatter = new SimpleDateFormat("MM月dd日 HH:mm");
         Date curDate = new Date(System.currentTimeMillis());
         String sysTimeStr = formatter.format(curDate);
+        // 显示当前时间
         mTime.setText(sysTimeStr);
+        // 时间更新
         new TimeThread().start();
-        mUserSetBt = (Button) findViewById(R.id.userSet_bt);
-        mDataMonitorBt = (Button) findViewById(R.id.dataMonitor_bt);
-
-        /*
-         监听用户设置按钮
-         */
+        // 监听用户设置按钮
         mUserSetBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // 转到用户设置活动
                 Intent userSet = new Intent(WelcomeActivity.this,UserSetActivity.class);
                 startActivity(userSet);
-//                Toast.makeText(WelcomeActivity.this, "用户设置！", Toast.LENGTH_SHORT).show();
             }
         });
 
-        /*
-          监听数据监测按钮
-         */
+        // 监听数据监测按钮
         mDataMonitorBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // 转到 数据监测设置活动
                 Intent dataMonitor = new Intent(WelcomeActivity.this,DataSetActivity.class);
                 startActivity(dataMonitor);
 //                Toast.makeText(WelcomeActivity.this, "数据监测！！", Toast.LENGTH_SHORT).show();
             }
         });
     }
+
 
     private Handler mHandler = new Handler() {
         @Override

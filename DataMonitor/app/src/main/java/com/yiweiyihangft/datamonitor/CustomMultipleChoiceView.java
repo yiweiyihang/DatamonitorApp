@@ -42,6 +42,9 @@ public class CustomMultipleChoiceView extends LinearLayout {
         initView();
     }
 
+    /**
+     * 初始化页面
+     */
     private void initView(){
 		/* 实例化各个控件 */
         LayoutInflater inflater = LayoutInflater.from(getContext());
@@ -78,8 +81,10 @@ public class CustomMultipleChoiceView extends LinearLayout {
         addView(view);
     }
 
-    /*
-      用户选择的测点显示设置 checkbox勾选
+    /**
+     * 用户选择的测点显示设置 checkbox勾选
+     * @param data              测点名称列表
+     * @param isSelected        测点被选择状态标志
      */
     public void setData(String[] data, boolean[] isSelected){
         if(data == null){
@@ -101,12 +106,20 @@ public class CustomMultipleChoiceView extends LinearLayout {
         lv.setAdapter(mAdapter);
     }
 
+    /**
+     * 设置标题
+     * @param title
+     */
     public void setTitle(String title){
         if(this.title != null){
             this.title.setText(title);
         }
     }
 
+    /**
+     * 设置选择监听器
+     * @param l
+     */
     public void setOnSelectedListener(onSelectedListener l){
         this.onSelectedListener = l;
     }
@@ -114,6 +127,8 @@ public class CustomMultipleChoiceView extends LinearLayout {
     public interface onSelectedListener{
         public void onSelected(Boolean[] sparseBooleanArray);
     }
+
+
     /**
      * 全选
      */
@@ -126,6 +141,8 @@ public class CustomMultipleChoiceView extends LinearLayout {
             mAdapter.notifyDataSetChanged();
         }
     }
+
+
     /**
      * 全不选
      */

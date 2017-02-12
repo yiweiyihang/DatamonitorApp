@@ -20,38 +20,74 @@ import netRequest.ThirdRequest;
 
 /**
  * Created by 32618 on 2016/12/24.
- * 显示对应工序可选择的测点对话框
+ * 显示对应工序可选择的测点列表
  */
 public class Dialog{
     private Context context;
     private View view;
+    /**
+     * 测点名称数组
+     */
+    public String[] paraItems;
+
+    /**
+     * 测点被选择状态Map
+     */
+    public static boolean[] isParaSelected;
+    /**
+     * 测点名称窗口
+     */
+    private PopupWindow stationSelectDialog;
+
+    /**
+     * 构造函数
+     * @param context
+     * @param view
+     */
     public Dialog(Context context,View view){
         this.context = context;
         this.view = view;
     }
-    public String[] paraItems;
-    private PopupWindow stationSelectDialog;
-    public void getDialog(final int i){
+
+    /**
+     * 获取测点名称列表
+     * @param proID 工序ID
+     */
+    public void getDialog(final int proID){
+        // 新建请求
         ThirdRequest arequest = new ThirdRequest();
-        arequest.proID = Integer.toString(i);//传入id对应工序id
+        //传入对应工序id
+        arequest.proID = Integer.toString(proID);
+        // 发送请求
         BaseNetTopBusiness baseNetTopBusiness=new BaseNetTopBusiness(new NetTopListener(){
             @Override
             public void onSuccess(HttpResponse response) {
-                System.out.println("成功");
+                // 获得返回字节流
                 byte[] bytes=response.bytes;
+
+                /******* 调试专用 ********/
+                System.out.println("成功");
                 String s=new String(bytes);
                 System.out.println("result="+bytes.length);
+                /******* 调试专用 ********/
+                // 获得并显示测点名称列表
                 try {
                     String str = new String(bytes, "gbk");
+                    /******* 调试专用 ********/
                     System.out.println(str);
                     System.out.println(str.length());
+                    /******* 调试专用 ********/
+
                     JSONObject object = new JSONObject(str);
                     System.out.println("======:" + object.length());
                     paraItems = new String[object.length()];
-                    for (int k = 1; k <= object.length(); k++) {//根据数据库获取的id与测点名包装的json对象
+                    //根据数据库获取的id与测点名包装的json对象
+                    for (int k = 1; k <= object.length(); k++) {
+                        // 获得测点名称    注意测点ID是 1序 的   测点名称数组是0序的
                         paraItems[k - 1] = object.getString(Integer.toString(k));
                     }
-                    showMutiChoiceDialog(paraItems,i);
+                    // 显示测点多选对话框
+                    showMutiChoiceDialog(paraItems,proID);
                 }
                 catch (Exception e)
                 {
@@ -70,14 +106,25 @@ public class Dialog{
         baseNetTopBusiness.startRequest(arequest);
 
     }
+
+    /**
+     * 显示测点多选对话框
+     * @param stationsMean 测点名称列表
+     * @param i     对应工序ID
+     */
     private void showMutiChoiceDialog(final String[] stationsMean,final int i ){
+        // 初始化窗口
         if(stationSelectDialog == null){
+            // 动态生成页面
             LayoutInflater inflater = LayoutInflater.from(context);
             View view = inflater.inflate(R.layout.dialog_multiplechoice, null);
+            // 绑定多选框页面
             CustomMultipleChoiceView mutipleChoiceView = (CustomMultipleChoiceView) view.findViewById(R.id.CustomMultipleChoiceView);
-            mutipleChoiceView.setData(stationsMean, null);
-            System.out.println("station.length-"+stationsMean.length);
+            // 显示测点名称列表
+            mutipleChoiceView.setData(stationsMean, isParaSelected);
+            // 全选
             mutipleChoiceView.selectAll();
+            // 设置对话框标题
             mutipleChoiceView.setTitle("多选");
             stationSelectDialog = new PopupWindow(view, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
             mutipleChoiceView.setOnSelectedListener(new onSelectedListener() {
