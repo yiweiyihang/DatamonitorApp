@@ -126,6 +126,7 @@ public class Dialog{
             mutipleChoiceView.selectAll();
             // 设置对话框标题
             mutipleChoiceView.setTitle("多选");
+            // TODO  测试github
             stationSelectDialog = new PopupWindow(view, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
             mutipleChoiceView.setOnSelectedListener(new onSelectedListener() {
                 @Override
