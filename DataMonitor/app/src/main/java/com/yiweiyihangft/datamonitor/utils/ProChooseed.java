@@ -12,11 +12,11 @@ import java.util.Map;
 
 public class ProChooseed {
     /**
-     * 用户选择的工序
+     * 用户选择的工序名称
      */
     private String[] proChoose;
     /**
-     * 用户选择的测点
+     * 用户选择的测点测点名称
      */
     private String[] paraChoose;
     private int i = 0;
@@ -46,7 +46,6 @@ public class ProChooseed {
         if(Constants.promap!=null) {
             //System.out.println(Constants.promap.get(id));
             paraChoose = new String[Constants.promap.get(id).size()];
-
             for (Map.Entry<Integer, String> entry : Constants.promap.get(id).entrySet()) {
                 paraChoose[j] = entry.getValue();
                 j++;

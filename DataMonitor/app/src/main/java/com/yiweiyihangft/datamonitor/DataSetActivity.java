@@ -72,6 +72,7 @@ public class DataSetActivity extends AppCompatActivity {
         final SharedPreferences.Editor proEditor = proSelectedPrf.edit();
         // 初始化工序显示页面 发送读取工序申请  返回所有可供选择的工序并显示在页面上
         iniView();
+
         // 监听配置完成按钮
         setConfirm_bt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,7 +109,8 @@ public class DataSetActivity extends AppCompatActivity {
                     // 转到ShowDataActivity
                     Intent i = new Intent();
                     Bundle bundle = new Bundle();
-                    bundle.putInt("count", Constants.proChoose.size());  // 发送选择工序的个数
+                    // 发送选择工序的个数
+                    bundle.putInt("count", Constants.proChoose.size());
                     i.putExtras(bundle);
                     i.setClass(DataSetActivity.this, ShowDataActivity.class);
                     startActivity(i);

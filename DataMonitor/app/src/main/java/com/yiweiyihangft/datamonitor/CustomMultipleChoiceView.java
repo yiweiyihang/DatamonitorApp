@@ -32,6 +32,10 @@ public class CustomMultipleChoiceView extends LinearLayout {
      */
     private MutipleChoiceAdapter mAdapter;
     /**
+     * 测点对应工序ID
+     */
+    private int proID;
+    /**
      *  测点描述列表
      */
     private String[] data;
@@ -39,7 +43,18 @@ public class CustomMultipleChoiceView extends LinearLayout {
      * 多选窗口标题
      */
     private TextView title;
+    /**
+     * 测点描述表格View
+     */
     private ListView lv;
+    /**
+     * 全/反选按钮
+     */
+    Button bt_selectall;
+    /**
+     * 确定按钮
+     */
+    Button bt_ok;
     /**
      * 确定选择监听器
      */
@@ -49,13 +64,16 @@ public class CustomMultipleChoiceView extends LinearLayout {
      */
     private boolean curWillCheckAll = false;
 
+
     public CustomMultipleChoiceView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        // 初始化页面
         initView();
     }
 
     public CustomMultipleChoiceView(Context context) {
         super(context);
+        // 初始化页面
         initView();
     }
 
@@ -67,37 +85,56 @@ public class CustomMultipleChoiceView extends LinearLayout {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View view = inflater.inflate(R.layout.custom_mutiplechoice_view, null);
         lv = (ListView) view.findViewById(R.id.mutiplechoice_listview);
-        Button bt_selectall = (Button) view.findViewById(R.id.mutiplechoice_selectall_btn);
-        Button bt_ok = (Button) view.findViewById(R.id.mutiplechoice_ok_btn);
+        bt_selectall = (Button) view.findViewById(R.id.mutiplechoice_selectall_btn);
+        bt_ok = (Button) view.findViewById(R.id.mutiplechoice_ok_btn);
         title = (TextView) view.findViewById(R.id.mutiplechoice_title);
 
+        // 初始化全反选按钮文字
         if(curWillCheckAll){
-            bt_selectall.setText("选");
-        }else{
             bt_selectall.setText("反选");
+        }else{
+            bt_selectall.setText("全选");
         }
         MyClickListener l = new MyClickListener();
 
-        // 全选按钮的回调接口
+        // 全/反选按钮监听器
         bt_selectall.setOnClickListener(l);
+        // 确定按钮监听器
         bt_ok.setOnClickListener(l);
 
-        // 绑定listView的监听器
+        // 绑定测点名称的监听器
         lv.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position,
                                     long arg3) {
-                // 取得ViewHolder对象，这样就省去了通过层层的findViewById去实例化我们需要的cb实例的步骤
+                // 取得ViewHolder对象，
+                // 这样就省去了通过层层的findViewById去实例化我们需要的cb实例的步骤
                 ViewHolder holder = (ViewHolder) arg1.getTag();
                 // 改变CheckBox的状态
                 holder.cb.toggle();
-//                Toast.makeText(getContext(), "选中这个！", Toast.LENGTH_SHORT).show();
                 // 将CheckBox的选中状况记录下来
                 mAdapter.getIsSelected()[position]=holder.cb.isChecked();
             }
         });
         addView(view);
     }
+
+    /**
+     * 设置对应工序ID
+     * @param proID
+     */
+    public void setProID(int proID){
+        this.proID = proID;
+    }
+
+//    /**
+//     * 读取对应工序ID
+//     * @return
+//     */
+//    public int getProID(){
+//        return proID;
+//    }
+
 
     /**
      * 用户选择的测点显示设置 checkbox勾选
@@ -109,16 +146,18 @@ public class CustomMultipleChoiceView extends LinearLayout {
             throw new IllegalArgumentException("data is null");
         }
         this.data = data;
-        mAdapter = new MutipleChoiceAdapter(data, getContext());
-        if(isSelected != null){
-            if(isSelected.size() != data.length){
-                throw new IllegalArgumentException("data's length not equal the isSelected's length");
-            }else{
-                for(int i=0; i<isSelected.size(); i++){
-                    mAdapter.getIsSelected()[i]=isSelected.get(i);
-                }
-            }
-        }
+        // 建立测点单项显示适配器
+        mAdapter = new MutipleChoiceAdapter(proID,data, getContext());
+//        if(isSelected != null){
+//            if(isSelected.size() != data.length){
+//                throw new IllegalArgumentException("data's length not equal the isSelected's length");
+//            }else{
+//                for(int i=0; i<isSelected.size(); i++){
+//                    mAdapter.getIsSelected()[i]=isSelected.get(i);
+//                }
+//            }
+//        }
+
         // 绑定Adapter
         lv.setAdapter(mAdapter);
     }
@@ -141,6 +180,9 @@ public class CustomMultipleChoiceView extends LinearLayout {
         this.onSelectedListener = l;
     }
 
+    /**
+     * 监听接口
+     */
     public interface onSelectedListener{
         public void onSelected(Boolean[] sparseBooleanArray);
     }
@@ -174,15 +216,20 @@ public class CustomMultipleChoiceView extends LinearLayout {
     }
 
 
+    /**
+     * 按钮点选监听器
+     */
     private class MyClickListener implements OnClickListener{
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
+                //全选/反选按钮
                 case R.id.mutiplechoice_selectall_btn:
-                    //全选/反选按钮
                     if(data == null){
                         return;
                     }
+                    // 改变全反选状态
+                    curWillCheckAll = !curWillCheckAll;
                     if(curWillCheckAll){
                         selectAll();
                     }else{
@@ -193,10 +240,10 @@ public class CustomMultipleChoiceView extends LinearLayout {
                     }else{
                         ((Button)v).setText("全选");
                     }
-                    curWillCheckAll = !curWillCheckAll;
+
                     break;
+                //确定选择的按钮
                 case R.id.mutiplechoice_ok_btn:
-                    //确定选择的按钮
                     if(onSelectedListener != null && mAdapter != null){
                         onSelectedListener.onSelected(mAdapter.getIsSelected());
                     }

@@ -32,11 +32,15 @@ public class Constants {
      */
     public static ArrayList<Boolean> isProSelected = new ArrayList<>();
 
-    //Integer：工序ID  Map<Integer,String>  该工序用户要监测的测点
+    /**
+     * 用户选择工序及对应测点
+     * Integer：工序ID
+     * Map：Integer 测点ID , String 测点描述
+     */
     public static Map<Integer,Map<Integer,String>> promap = new HashMap<>();
 
     /**
-     * 测点名称Map
+     * 用户以选择测点名称Map   1序
      * Integer：测点ID   String：测点名称
      */
     public static Map<Integer,String> paramap = new LinkedHashMap<>();

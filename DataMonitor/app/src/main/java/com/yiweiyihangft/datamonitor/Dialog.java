@@ -43,7 +43,9 @@ public class Dialog{
     /**
      * 存储测点被选择状态
      */
-    private SharedPreferences  paraSelectedPrf;
+    private SharedPreferences paraSelectedPrf;
+
+
 
     /**
      * 构造函数
@@ -129,16 +131,12 @@ public class Dialog{
             View view = inflater.inflate(R.layout.dialog_multiplechoice, null);
             // 绑定多选框页面
             CustomMultipleChoiceView mutipleChoiceView = (CustomMultipleChoiceView) view.findViewById(R.id.CustomMultipleChoiceView);
-
-            // 读取用户测点选择状态
-            for(int i=0;i<stationsMean.length;i++){
-                boolean isSelected = paraSelectedPrf.getBoolean("isParaSelected" + i,false);
-                Constants.isParaSelected.add(i,isSelected);
-            }
+            // 设置对应工序ID
+            mutipleChoiceView.setProID(proID);
             // 显示测点名称列表
-            mutipleChoiceView.setData(stationsMean,Constants.isParaSelected);
+            mutipleChoiceView.setData(stationsMean,null);
             // TODO 初始全选
-            mutipleChoiceView.selectAll();
+//            mutipleChoiceView.selectAll();
             // 设置对话框标题
             mutipleChoiceView.setTitle("多选");
 
@@ -149,17 +147,30 @@ public class Dialog{
             mutipleChoiceView.setOnSelectedListener(new onSelectedListener() {
                 @Override
                 public void onSelected(Boolean[] sparseBooleanArray) {
+                    // 清除缓存
                     stationSelectDialog.dismiss();
+                    // 存储用户测点选择状态
+                    SharedPreferences.Editor paraSelected = paraSelectedPrf.edit();
                     for (int j = 0; j < sparseBooleanArray.length; j++) {
                         if (sparseBooleanArray[j]) {
+                            // 向数据源存储用户选择测点 1序 (测点ID，测点描述)
                             Constants.paramap.put(j+1, stationsMean[j]);
+                            paraSelected.putBoolean(proID + "isParaSelected" + (j+1),true);
+                            paraSelected.commit();
+                        }
+                        else{
+                            paraSelected.putBoolean(proID + "isParaSelected" + (j+1),false);
+                            paraSelected.commit();
                         }
                     }
+                    // 向数据源存储工序Map
                     Constants.promap.put(proID, Constants.paramap);
+                    // 申请新的存储空间
                     Constants.paramap = new LinkedHashMap<Integer, String>();
                 }
             });
         }
+        // 设置窗口显示位置
         stationSelectDialog.showAtLocation(view, Gravity.CENTER, 0, 0);
     }
 }
