@@ -20,6 +20,17 @@
         android:layout_marginTop="20dp"
         android:gravity="center_horizontal"/>
     <Button
+        android:id="@+id/monitorStart_bt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:background="@android:color/holo_red_light"
+        android:textColor="@android:color/white"
+        android:gravity="center"
+        android:textSize="16dp"
+        android:text="开始监测"/>
+
+    <Button
         android:id="@+id/dataMonitor_bt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -31,6 +31,11 @@ public class WelcomeActivity extends AppCompatActivity {
      */
     private Button mDataMonitorBt;
 
+    /**
+     * 开始监测按钮
+     */
+    private Button mMonitorStartBt;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +52,7 @@ public class WelcomeActivity extends AppCompatActivity {
         mTime = (TextView) findViewById(R.id.data_show_text);
         mUserSetBt = (Button) findViewById(R.id.userSet_bt);
         mDataMonitorBt = (Button) findViewById(R.id.dataMonitor_bt);
+        mMonitorStartBt = (Button)findViewById(R.id.monitorStart_bt);
         // 获得当前时间
         SimpleDateFormat formatter = new SimpleDateFormat("MM月dd日 HH:mm");
         Date curDate = new Date(System.currentTimeMillis());
@@ -70,9 +76,17 @@ public class WelcomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // 转到 数据监测设置活动
-                Intent dataMonitor = new Intent(WelcomeActivity.this,DataSetActivity.class);
-                startActivity(dataMonitor);
+                Intent dataSet = new Intent(WelcomeActivity.this,DataSetActivity.class);
+                startActivity(dataSet);
 //                Toast.makeText(WelcomeActivity.this, "数据监测！！", Toast.LENGTH_SHORT).show();
+            }
+        });
+        mMonitorStartBt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // // 转到 数据监测设置活动
+                Intent dataMonitor = new Intent(WelcomeActivity.this,ShowDataActivity.class);
+                startActivity(dataMonitor);
             }
         });
     }

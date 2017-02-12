@@ -1,6 +1,7 @@
 package com.yiweiyihangft.datamonitor;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,14 +31,19 @@ public class Dialog{
      */
     public String[] paraItems;
 
+//    /**
+//     * 测点被选择状态Map
+//     */
+//    public static boolean[] isParaSelected;
+
     /**
-     * 测点被选择状态Map
-     */
-    public static boolean[] isParaSelected;
-    /**
-     * 测点名称窗口
+     * 测点名称列表窗口
      */
     private PopupWindow stationSelectDialog;
+    /**
+     * 存储测点被选择状态
+     */
+    private SharedPreferences  paraSelectedPrf;
 
     /**
      * 构造函数
@@ -47,6 +53,7 @@ public class Dialog{
     public Dialog(Context context,View view){
         this.context = context;
         this.view = view;
+        this.paraSelectedPrf = context.getSharedPreferences("MyProject",Context.MODE_PRIVATE);
     }
 
     /**
@@ -80,6 +87,7 @@ public class Dialog{
 
                     JSONObject object = new JSONObject(str);
                     System.out.println("======:" + object.length());
+                    // 新建测点名称数组
                     paraItems = new String[object.length()];
                     //根据数据库获取的id与测点名包装的json对象
                     for (int k = 1; k <= object.length(); k++) {
@@ -88,6 +96,7 @@ public class Dialog{
                     }
                     // 显示测点多选对话框
                     showMutiChoiceDialog(paraItems,proID);
+
                 }
                 catch (Exception e)
                 {
@@ -110,9 +119,9 @@ public class Dialog{
     /**
      * 显示测点多选对话框
      * @param stationsMean 测点名称列表
-     * @param i     对应工序ID
+     * @param proID     对应工序ID
      */
-    private void showMutiChoiceDialog(final String[] stationsMean,final int i ){
+    private void showMutiChoiceDialog(final String[] stationsMean,final int proID ){
         // 初始化窗口
         if(stationSelectDialog == null){
             // 动态生成页面
@@ -120,14 +129,23 @@ public class Dialog{
             View view = inflater.inflate(R.layout.dialog_multiplechoice, null);
             // 绑定多选框页面
             CustomMultipleChoiceView mutipleChoiceView = (CustomMultipleChoiceView) view.findViewById(R.id.CustomMultipleChoiceView);
+
+            // 读取用户测点选择状态
+            for(int i=0;i<stationsMean.length;i++){
+                boolean isSelected = paraSelectedPrf.getBoolean("isParaSelected" + i,false);
+                Constants.isParaSelected.add(i,isSelected);
+            }
             // 显示测点名称列表
-            mutipleChoiceView.setData(stationsMean, isParaSelected);
-            // 全选
+            mutipleChoiceView.setData(stationsMean,Constants.isParaSelected);
+            // TODO 初始全选
             mutipleChoiceView.selectAll();
             // 设置对话框标题
             mutipleChoiceView.setTitle("多选");
-            // TODO  测试github
+
+            // 新建窗口对象
             stationSelectDialog = new PopupWindow(view, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+
+            // 监听多选框 的选择
             mutipleChoiceView.setOnSelectedListener(new onSelectedListener() {
                 @Override
                 public void onSelected(Boolean[] sparseBooleanArray) {
@@ -137,7 +155,7 @@ public class Dialog{
                             Constants.paramap.put(j+1, stationsMean[j]);
                         }
                     }
-                    Constants.promap.put(i, Constants.paramap);
+                    Constants.promap.put(proID, Constants.paramap);
                     Constants.paramap = new LinkedHashMap<Integer, String>();
                 }
             });
