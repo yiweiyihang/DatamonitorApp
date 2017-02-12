@@ -86,6 +86,7 @@ public class ShowDataActivity extends AppCompatActivity {
      */
     private String frequency = null ;
 
+    // TODO 业务逻辑需要更改  思考如何跳过配置阶段
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
