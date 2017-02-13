@@ -153,11 +153,12 @@ public class ShowDataActivity extends AppCompatActivity {
                         /***********调试专用***********/
                         if(i==count) {
                             pager.removeAllViews();
-                            if(Constants.timemap.get(0)!=null){
+//                            if(Constants.timemap.get(0)!=null){
                                 proTime.setText(Constants.timemap.get(0));
-                                proTime.setTextColor(Color.GREEN);
+                                proTime.setTextColor(Color.WHITE);
                                 proTime.setTextSize(16);
-                            }
+//                            }
+
                             // 绑定页面适配器
                             myPagerAdapter = new MyPagerAdapter(count,Constants.proChoose, getSupportFragmentManager());
 //                            System.out.println("---------");
@@ -182,13 +183,16 @@ public class ShowDataActivity extends AppCompatActivity {
             });
             baseNetTopBusiness.startRequest(dataRequest);
         }
+        // 设置页面标题
         if (Constants.proChoose != null && Constants.proChoose.size() >= 1) {
             // 默认显示第一个工序名称
             proName.setText(Constants.proChoose.get(0));
-            // 设置工序显示字体
-            proName.setTextSize(16);
-            // 设置工序显示颜色
-            proName.setTextColor(Color.RED);
+            proName.setTextSize(24);
+            proName.setTextColor(Color.WHITE);
+//            // 显示第一个工序的时间
+//            proTime.setText(Constants.timemap.get(0));
+//            proTime.setTextColor(Color.WHITE);
+//            proTime.setTextSize(16);
         }
 
         /**
@@ -271,10 +275,10 @@ public class ShowDataActivity extends AppCompatActivity {
                 // GetProId gpi = new GetProId();
                 String str = Constants.proChoose.get(position);
                 proName.setText(str);
-                proName.setTextSize(16);
-                proName.setTextColor(Color.RED);
+                proName.setTextSize(24);
+                proName.setTextColor(Color.WHITE);
                 proTime.setText(Constants.timemap.get(position));
-                proTime.setTextColor(Color.GREEN);
+                proTime.setTextColor(Color.WHITE);
                 proTime.setTextSize(16);
             }
 

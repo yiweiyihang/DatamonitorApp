@@ -4,42 +4,36 @@
     android:id="@+id/activity_show_data"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingTop="8dp"
     android:paddingLeft="8dp"
     android:paddingRight="8dp"
-    android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
     tools:context="com.yiweiyihangft.datamonitor.ShowDataActivity">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
-            android:id="@+id/proNameId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="工序:"
-            android:textStyle="bold"
-            android:textSize="18dp"
-            />
+        android:layout_height="42dp"
+        android:orientation="horizontal"
+        android:background="@color/colorAccent">
+
         <TextView
             android:id="@+id/proName"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="5"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
+            android:gravity="center"
+            android:layout_gravity="center"
             tools:text="工序名称"/>
-        <TextView
-            android:id="@+id/proTimeId"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=" 时间:"
-            android:textSize="16dp"
-            android:layout_marginLeft="8dp"
-            android:layout_gravity="center" />
+
         <TextView
             android:id="@+id/proTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="0dp"
+            android:layout_weight="5"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="8dp"
+            android:gravity="right"
+            android:layout_gravity="center"
+            tools:text="2016-11-12 18:39:00"/>
     </LinearLayout>
 
     <android.support.v4.view.ViewPager

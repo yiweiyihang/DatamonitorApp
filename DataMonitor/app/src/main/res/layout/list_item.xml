@@ -23,6 +23,7 @@
             android:layout_width="235dp"
             android:gravity="center"
             android:textSize="16dp"
+            android:maxLines="1"
             android:layout_height="wrap_content"/>
         <!--<View-->
         <!--android:layout_width="0.5dp"-->
