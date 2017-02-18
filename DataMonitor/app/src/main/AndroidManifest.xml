@@ -54,7 +54,6 @@
         <activity
             android:name=".ShowDataActivity"
             android:theme="@style/noTitle" />
-        <activity android:name=".ConnectActivity"></activity>
     </application>
 
 </manifest>

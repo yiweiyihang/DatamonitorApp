@@ -20,21 +20,7 @@ public class ProChooseed {
      */
     private String[] paraChoose;
     private int i = 0;
-
-//    /**
-//     * 获取用户选择的工序
-//     * @return
-//     */
-//    public String[] getPro(){
-//        if(Constants.promap!=null) {
-//            for (Map.Entry<Integer, Map<Integer, String>> entry : Constants.promap.entrySet()) {
-//                proChoose[i] = Constants.proItems[entry.getKey()];
-//                i++;
-//            }
-//            return proChoose;
-//        }
-//        return null;
-//    }
+    
 
     /**
      * 获取测点列表
