@@ -1,4 +1,7 @@
 <resources>
+    <string name="Button_startMonitor">开始监测</string>
+    <string name="Button_DataSet">监测设置</string>
+    <string name="Button_UserSet">用户设置</string>
     <string name="app_name">数据监测</string>
     <string name="Register">注册</string>
     <string name="Instr_userSet">点击用户设置更改密码和设置频率</string>
