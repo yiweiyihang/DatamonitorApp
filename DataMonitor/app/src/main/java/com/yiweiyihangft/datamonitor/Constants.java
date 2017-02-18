@@ -30,13 +30,17 @@ public class Constants {
     /**
      * 工序选择状态
      */
-    public static boolean[] isProSelected;
+    public static ArrayList<Boolean> isProSelected = new ArrayList<>();
 
-    //Integer：工序ID  Map<Integer,String>  该工序用户要监测的测点
+    /**
+     * 用户选择工序及对应测点
+     * Integer：工序ID
+     * Map：Integer 测点ID , String 测点描述
+     */
     public static Map<Integer,Map<Integer,String>> promap = new HashMap<>();
 
     /**
-     * 测点名称Map
+     * 用户以选择测点名称Map   1序
      * Integer：测点ID   String：测点名称
      */
     public static Map<Integer,String> paramap = new LinkedHashMap<>();
@@ -44,7 +48,7 @@ public class Constants {
      * 测点选择状态Map
      * Integer: 测点ID Boolean：测点被选择状态
      */
-    public static boolean[] isParaSelected ;
+    public static ArrayList<Boolean> isParaSelected = new ArrayList<>() ;
     public static String UserName;
     public static String frequency = "15";
 

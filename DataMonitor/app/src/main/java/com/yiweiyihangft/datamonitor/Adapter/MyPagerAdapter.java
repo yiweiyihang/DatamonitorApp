@@ -18,20 +18,40 @@ import java.util.List;
  * Created by 32618 on 2016/12/29.
  */
 public class MyPagerAdapter extends FragmentPagerAdapter {
+    /**
+     * 用户选择工序个数
+     */
     private int count;
+    /**
+     * 工序显示页面
+     */
     private Fragment[] fragments;
+    /**
+     * 工序名称数组
+     */
+    private List titles = Constants.proChoose;
+
+    /**
+     * 构造函数
+     * @param count     用户选择工序个数
+     * @param prolist   用户选择工序名列表  Constant.proChoose
+     * @param fm        Fragment管理器
+     */
     public MyPagerAdapter(int count, List prolist, FragmentManager fm) {
         super(fm);
         this.count=count;
         fragments = null;
         //System.out.println("*********dasfaefsdafa*****"+count);
-        GetProId mGetProID = new GetProId();
+
+
         ProChooseed mProChooseed = new ProChooseed();
+        // 建立页面
         fragments = new ListViewFragment[count];
+        //动态生成每个工序的测点表格
         for(int i=0;i<count;i++) {
-            //动态生成每个工序的测点表格
+
             // 获取工序ID
-            int proId = mGetProID .getId((String) prolist.get(i));
+            int proId = GetProId.getId((String) prolist.get(i));
             // 获得工序ID对应的测点表格
             String[] paras = mProChooseed.getPara(proId);
             // 打包工序的测点表格
@@ -43,7 +63,7 @@ public class MyPagerAdapter extends FragmentPagerAdapter {
             fragments[i].setArguments(b);
         }
     }
-    private List titles = Constants.proChoose;
+
     @Override
     public int getCount() {
         if (titles == null) {

@@ -8,6 +8,7 @@ import com.yiweiyihangft.datamonitor.Constants;
  */
 
 public class GetProId {
+
     public static int getId(String str){
         for(int i = 0; i< Constants.proItems.length; i++){
             if(Constants.proItems[i].equals(str)){

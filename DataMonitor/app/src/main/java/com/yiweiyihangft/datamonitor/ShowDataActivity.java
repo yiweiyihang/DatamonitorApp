@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,6 +16,7 @@ import com.yiweiyihangft.datamonitor.utils.ProChooseed;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -26,49 +28,107 @@ import netRequest.NetTopListener;
 import static com.yiweiyihangft.datamonitor.Constants.context;
 
 public class ShowDataActivity extends AppCompatActivity {
+    /**
+     * 标记
+     */
+    private String LOG_TAG = "ShowDataActivity";
+    /**
+     * 工序名称显示
+     */
     private TextView proName;
+    /**
+     * 工序数据时间显示
+     */
     private TextView proTime;
+    /**
+     * 工序信息显示页面适配器
+     */
     private static MyPagerAdapter myPagerAdapter;
+
     private ViewPager pager;
+    /**
+     * 工序ID
+     */
+    private int proId;
+    /**
+     * 用户已工序个数
+     */
     private int count;
+    /**
+     * 最大工序个数
+     */
+    private static final int MAX_PRO_COUNT = 20;
+    /**
+     * 用户已选择工序对应ID数组
+     */
+    private ArrayList<Integer> prosChooseID;
+    /**
+     *  定时器
+     */
     private Timer mTimer;
     private TimerTask mTimerTask;
     private int i;
+    /**
+     * 获取工序Id
+     */
     private  GetProId getProId = new GetProId();
+    /**
+     * 获取已选择工序
+     */
     private  ProChooseed pc = new ProChooseed();
-    private int proId;
 
+    /**
+     * 用户偏好设置
+     */
+    private SharedPreferences dataPref ;
     /**
      * 用户频率设置
      */
-    private SharedPreferences sp ;
     private String frequency = null ;
+
+    // TODO 业务逻辑需要更改  思考如何跳过配置阶段
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // 绑定页面
         setContentView(R.layout.activity_show_data);
+        // 关联页面元素
         context=this;
-        // System.out.println("************************---------");
         pager = (ViewPager) findViewById(R.id.pagers);
-        Intent intent = this.getIntent();
-        Bundle bundle=intent.getExtras();
-        count=bundle.getInt("count");
-        //System.out.println("count=" + count);
         proName = (TextView) findViewById(R.id.proName);
         proTime = (TextView) findViewById(R.id.proTime);
+        // 获取信息
+        Intent intent = this.getIntent();
+        Bundle bundle=intent.getExtras();
+        // 读取用户选择工序个数
+        count=bundle.getInt("count");
+
+        Log.v(LOG_TAG,"用户选择工序个数为：   " + count+" ");
+
+        // 清空缓存
         Constants.alldata.clear();
         Constants.timemap.clear();
-        sp = getSharedPreferences("Myproject",0);
-        frequency = sp.getString("frequency","");
+
+        // 读取用户频率设置
+        dataPref = getSharedPreferences("Myproject",0);
+        frequency = dataPref.getString("frequency","");
         if (!frequency.equals("")) {
             Constants.frequency = frequency;
         }
+        Toast.makeText(this,"当前频率"+frequency,Toast.LENGTH_SHORT).show();
 
 //        final ProChooseed pc = new ProChooseed();
+//        for(i=0;i<Constants.proChoose.size();i++)
+
         for(i=0;i<Constants.proChoose.size();i++) {
             DataRequest dataRequest = new DataRequest();
+            // 读取工序ID
             final int proId = getProId.getId(Constants.proChoose.get(i));
+//            if(dataPref.getBoolean("isProSelected" + i,false)){
+//                proId = i;
+//                prosChooseID.add(i);
+//            }
             System.out.println("======proId="+proId);
             dataRequest.dataReq = pc.getParaIdJson(proId).toString();
             BaseNetTopBusiness baseNetTopBusiness = new BaseNetTopBusiness(new NetTopListener() {
@@ -77,27 +137,32 @@ public class ShowDataActivity extends AppCompatActivity {
                     System.out.println("成功");
                     byte[] bytes = response.bytes;
                     try {
+                        // 获取工序对应的Json数据
                         String str = new String(bytes, "gbk");
                         Constants.dataObject = new JSONObject(str);
+                        // 存储数据
                         Constants.timemap.put(proId,Constants.dataObject.getString("datatime"));
                         //System.out.println(Constants.timemap);
                         Constants.alldata.put(proId, Constants.dataObject);
+                        /***********调试专用***********/
 //                        System.out.println("====");
 //                        System.out.println(Constants.dataObject);
 //                        System.out.println("====");
 //                        System.out.println(new String(bytes, "gbk"));
-                        if(i==Constants.proChoose.size()) {
+//                        if(i==Constants.proChoose.size())
+                        /***********调试专用***********/
+                        if(i==count) {
                             pager.removeAllViews();
-                            if(Constants.timemap.get(0)!=null){
+//                            if(Constants.timemap.get(0)!=null){
                                 proTime.setText(Constants.timemap.get(0));
-                                proTime.setTextColor(Color.GREEN);
+                                proTime.setTextColor(Color.WHITE);
                                 proTime.setTextSize(16);
-                            }
+//                            }
+
                             // 绑定页面适配器
-                            myPagerAdapter = new MyPagerAdapter(count, Constants.proChoose, getSupportFragmentManager());
+                            myPagerAdapter = new MyPagerAdapter(count,Constants.proChoose, getSupportFragmentManager());
 //                            System.out.println("---------");
 //                            System.out.println(Constants.alldata);
-
                             pager.setAdapter(myPagerAdapter);
 
                         }
@@ -118,13 +183,16 @@ public class ShowDataActivity extends AppCompatActivity {
             });
             baseNetTopBusiness.startRequest(dataRequest);
         }
+        // 设置页面标题
         if (Constants.proChoose != null && Constants.proChoose.size() >= 1) {
             // 默认显示第一个工序名称
             proName.setText(Constants.proChoose.get(0));
-            // 设置工序显示字体
-            proName.setTextSize(16);
-            // 设置工序显示颜色
-            proName.setTextColor(Color.RED);
+            proName.setTextSize(24);
+            proName.setTextColor(Color.WHITE);
+//            // 显示第一个工序的时间
+//            proTime.setText(Constants.timemap.get(0));
+//            proTime.setTextColor(Color.WHITE);
+//            proTime.setTextSize(16);
         }
 
         /**
@@ -155,7 +223,7 @@ public class ShowDataActivity extends AppCompatActivity {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                            if(i==Constants.proChoose.size()) {
+                            if(i==count) {
                                 for(int j=0;j<Constants.proChoose.size();j++){
                                     ListViewFragment f =(ListViewFragment) myPagerAdapter.getFragment(j);
                                     // System.out.println(f.myAdapter);
@@ -187,6 +255,8 @@ public class ShowDataActivity extends AppCompatActivity {
         // 读取用户频率设定 定时器任务绑定
         int frequencySet = Integer.parseInt(Constants.frequency) * 1000;
         mTimer.schedule(mTimerTask,frequencySet,frequencySet);
+
+
         /**
          * 设定用户滑动页面的操作
          */
@@ -205,10 +275,10 @@ public class ShowDataActivity extends AppCompatActivity {
                 // GetProId gpi = new GetProId();
                 String str = Constants.proChoose.get(position);
                 proName.setText(str);
-                proName.setTextSize(16);
-                proName.setTextColor(Color.RED);
+                proName.setTextSize(24);
+                proName.setTextColor(Color.WHITE);
                 proTime.setText(Constants.timemap.get(position));
-                proTime.setTextColor(Color.GREEN);
+                proTime.setTextColor(Color.WHITE);
                 proTime.setTextSize(16);
             }
 
@@ -227,8 +297,7 @@ public class ShowDataActivity extends AppCompatActivity {
         super.onPause();
         // 消除定时器任务
         mTimer.cancel();
-        //清除选择的测点
-        Constants.paramap.clear();
+
     }
 }
 

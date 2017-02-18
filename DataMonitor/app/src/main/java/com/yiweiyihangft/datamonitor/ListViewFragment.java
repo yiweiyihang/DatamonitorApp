@@ -2,6 +2,7 @@ package com.yiweiyihangft.datamonitor;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -74,6 +75,10 @@ public class ListViewFragment extends Fragment {
      * 用户设置的显示顺序(拖拽)
      */
     private ArrayList<Integer> mapSort;
+    /**
+     * 用户排序偏好
+     */
+    private SharedPreferences sortSharedPrf;
 
     /**
      * 拖拽释放操作监听器
@@ -91,6 +96,13 @@ public class ListViewFragment extends Fragment {
                     // 更新用户排序设置
                     int order = removeMap(from);
                     insertMap(order, to);
+
+                    // TODO 更新用户排序偏好
+//                    SharedPreferences.Editor sortEditor = sortSharedPrf.edit();
+//                    for(int i=0;i<mapSort.size();i++){
+//                        sortEditor.putInt("sortMap" + i,mapSort.get(i));
+//                    }
+//                    sortEditor.commit();
                     //监听适配器数据源变化
                     myAdapter.notifyDataSetChanged();
 
@@ -155,6 +167,8 @@ public class ListViewFragment extends Fragment {
 
         // 初始化生成页面
         View rootView = inflater.inflate(R.layout.mylistview, container, false);
+        // 读取用户偏好
+        sortSharedPrf = getContext().getSharedPreferences("MyProject",Context.MODE_PRIVATE);
 
         // 初始化监听器设置list的拖住排序操作
         mylist = (DragSortListView) rootView.findViewById(R.id.mylist);
@@ -175,6 +189,7 @@ public class ListViewFragment extends Fragment {
         paraSub(paras);
         // 初始化用户排序Map
         initMap(table.size());
+
         // 初始化table_resort(根据用户排序)
         for (int j = 0; j < table.size(); j++) {
             table_resort.add(j, table.get(getIndex(j)));
@@ -347,6 +362,9 @@ public class ListViewFragment extends Fragment {
     private void initMap(int size) {
         mapSort = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
+        // TODO 当用户修改测点需求时怎么办
+//            int sortIndex = sortSharedPrf.getInt("sortMap" + i ,i);
+//            mapSort.add(i,sortIndex);
             mapSort.add(i);
         }
     }

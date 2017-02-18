@@ -1,6 +1,7 @@
 package com.yiweiyihangft.datamonitor;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -35,10 +36,7 @@ public class DataSetActivity extends AppCompatActivity {
      * 工序名称列表
      */
     private String[] proItems;
-    /**
-     * 工序选择状态
-     */
-    private boolean[] isProSelected;
+
     /**
      * 选择工序名称后的测点选择对话框
      */
@@ -56,6 +54,11 @@ public class DataSetActivity extends AppCompatActivity {
      */
     private Button setConfirm_bt;
 
+    /**
+     * 工序选择状态
+     */
+    private SharedPreferences proSelectedPrf;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +68,8 @@ public class DataSetActivity extends AppCompatActivity {
         setContentView(rootView);
         //关联页面元素
         setConfirm_bt = (Button) findViewById(R.id.set_confirm_bt);
+        proSelectedPrf = getSharedPreferences("MyProject",MODE_PRIVATE);
+        final SharedPreferences.Editor proEditor = proSelectedPrf.edit();
         // 初始化工序显示页面 发送读取工序申请  返回所有可供选择的工序并显示在页面上
         iniView();
 
@@ -74,7 +79,6 @@ public class DataSetActivity extends AppCompatActivity {
             public void onClick(View view) {
                 // 存储所有工序名称
                 Constants.proItems = proItems;
-                Constants.isProSelected = isProSelected;
                 if (Constants.proChoose != null && countClick != null) {
                     // 清空缓存
                     Constants.proChoose.clear();
@@ -84,20 +88,29 @@ public class DataSetActivity extends AppCompatActivity {
                         if (countClick[i] % 2 != 0) {   // 该工序选中
                             // 存储用户选择工序名称
                             Constants.proChoose.add(proItems[i]);
-                            // 设置该工序选择状态为true
-                            Constants.isProSelected[i] = true;
+                            // 存储工序选择状态到数据源中
+                            Constants.isProSelected.add(i,true);
+                            // 存储工序选择状态到SharedPrefer中
+                            proEditor.putBoolean("isProSelected" + i,true);
+                            proEditor.commit();
                         } else {      // 该工序未被选中
                             // 判断该工序是否选择过测点
-                            if (Constants.promap.get(i) != null) {
+//                            if (Constants.promap.get(i) != null) {
                                 // TODO 清除未选择工序的测点Map缓存
                                 Constants.promap.remove(i);
-                            }
+                                // 存储工序选择状态到数据源中
+                                Constants.isProSelected.add(i,false);
+                                // 存储工序选择状态到SharedPrefer中
+                                proEditor.putBoolean("isProSelected" + i,false);
+                                proEditor.commit();
+//                            }
                         }
                     }
                     // 转到ShowDataActivity
                     Intent i = new Intent();
                     Bundle bundle = new Bundle();
-                    bundle.putInt("count", Constants.proChoose.size());  // 发送选择工序的个数
+                    // 发送选择工序的个数
+                    bundle.putInt("count", Constants.proChoose.size());
                     i.putExtras(bundle);
                     i.setClass(DataSetActivity.this, ShowDataActivity.class);
                     startActivity(i);
@@ -129,7 +142,6 @@ public class DataSetActivity extends AppCompatActivity {
                     JSONObject object = new JSONObject(str);
                     countClick = new int[object.length()];    //工序点选次数数组
                     proItems = new String[object.length()];    // 工序名称数组
-                    isProSelected = new boolean[object.length()];  // 工序选择状态数组
                     // 逐条显示工序
                     for (int i = 0; i < object.length(); i++) {
                         // 动态添加到已有布局
@@ -137,11 +149,17 @@ public class DataSetActivity extends AppCompatActivity {
                         // 获取工序名称
                         String s = object.getString(Integer.toString(i));
                         proItems[i] = s;
+
                         // 设置工序显示的字体 宽度等
                         checkBox.setText(s);
                         checkBox.setTextSize(20);
+                        // 读取工序选择状态
+                        boolean isSelected = proSelectedPrf.getBoolean("isProSelected" + i,false);
+                        if(isSelected){
+                            countClick[i] ++;
+                        }
                         // 显示工序选择状态
-                        checkBox.setChecked(isProSelected[i]);
+                        checkBox.setChecked(isSelected);
 //                        checkBox.setTextColor(getResources().getColor(R.color.TextColor));
                         checkBox.setId(i);
                         // 监听选框点击事件

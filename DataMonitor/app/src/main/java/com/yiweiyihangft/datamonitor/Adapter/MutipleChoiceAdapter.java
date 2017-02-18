@@ -1,6 +1,7 @@
 package com.yiweiyihangft.datamonitor.Adapter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,30 +18,56 @@ import com.yiweiyihangft.datamonitor.R;
 
 public class MutipleChoiceAdapter extends BaseAdapter {
 
-    // 填充数据的list
+    /**
+     * 适配器数据
+     */
     private String[] list;
-    // 用来控制CheckBox的选中状况
+    /**
+     * 测点选择状态
+     */
     private Boolean[] isSelected;
-    // 用来导入布局
-    private LayoutInflater inflater;
 
-    public MutipleChoiceAdapter(String[] list, Context context) {
+
+    /**
+     * 布局生成器
+     */
+    private LayoutInflater inflater;
+    /**
+     * 对应工序ID
+     */
+    private int proID;
+    /**
+     * 存储测点被选择状态
+     */
+    private SharedPreferences paraSelectedPrf;
+
+    public MutipleChoiceAdapter(int proID,String[] list, Context context) {
         this.list = list;
+        this.proID = proID;
         inflater = LayoutInflater.from(context);
+        paraSelectedPrf = context.getSharedPreferences("MyProject",Context.MODE_PRIVATE);
         isSelected = new Boolean[list.length];
-        // 初始化数据
-        initData();
+
+        // 获取用户选择状态
+        initParaSelected();
+
+        /********* 调试专用 *************/
         System.out.println(list.length);
         for(int i=0;i<list.length;i++)
         {
             System.out.println("**************="+list[i]);
         }
+        /********* 调试专用 *************/
     }
 
-    // 初始化isSelected的数据
-    private void initData() {
+
+    /**
+     * 读取用户测点选择
+     */
+    private void initParaSelected() {
         for (int i = 0; i < list.length; i++) {
-            getIsSelected()[i] = false;
+            boolean isSelected = paraSelectedPrf.getBoolean( proID + "isParaSelected" + (i+1),false);
+            getIsSelected()[i] = isSelected;
         }
     }
 

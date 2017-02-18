@@ -51,8 +51,9 @@
         -->
 
         <activity android:name=".ShowLineChart" />
-        <activity android:name=".ShowDataActivity"
-            android:theme="@style/noTitle"></activity>
+        <activity
+            android:name=".ShowDataActivity"
+            android:theme="@style/noTitle" />
     </application>
 
 </manifest>
