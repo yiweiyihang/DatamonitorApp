@@ -85,7 +85,7 @@ public class WelcomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // // 转到 数据监测设置活动
-                Intent dataMonitor = new Intent(WelcomeActivity.this,ShowDataActivity.class);
+                Intent dataMonitor = new Intent(WelcomeActivity.this,ConnectActivity.class);
                 startActivity(dataMonitor);
             }
         });

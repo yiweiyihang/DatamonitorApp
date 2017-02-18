@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import org.json.JSONObject;
@@ -31,14 +33,73 @@ public class ConnectActivity extends AppCompatActivity {
      * 工序选择状态
      */
     private SharedPreferences SelectedPrf;
+
+    private Button start;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_connect);
+        start = (Button) findViewById(R.id.start);
         SelectedPrf = getSharedPreferences("MyProject",MODE_PRIVATE);
         getProItems();
-        storeProItems();
 
+
+        start.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // 转到ShowDataActivity
+                Intent i = new Intent();
+                Bundle bundle = new Bundle();
+                // 发送选择工序的个数
+                bundle.putInt("count", Constants.proChoose.size());
+                i.putExtras(bundle);
+                i.setClass(ConnectActivity.this, ShowDataActivity.class);
+                startActivity(i);
+            }
+        });
+    }
+
+    /**
+     * 发送读取工序申请  获取所有工序
+     */
+    private String[] getProItems() {
+        // SecondRequest 申请得到所有的工序信息
+        SecondRequest arequest = new SecondRequest();
+        BaseNetTopBusiness baseNetTopBusiness = new BaseNetTopBusiness(new NetTopListener() {
+            @Override
+            public void onSuccess(HttpResponse response) {
+                System.out.println("成功");
+                // 获得返回字节
+                byte[] bytes = response.bytes;
+                // 显示工序列表
+                try {
+                    String str = new String(bytes, "gbk");
+                    JSONObject object = new JSONObject(str);
+                    proItems = new String[object.length()];    // 工序名称数组
+                    // 逐条显示工序
+                    for (int i = 0; i < object.length(); i++) {
+                        // 动态添加到已有布局
+                        // 获取工序名称
+                        String s = object.getString(Integer.toString(i));
+                        proItems[i] = s;
+                    }
+                    storeProItems();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onFail() {
+                System.out.println("on fail");
+            }
+
+            @Override
+            public void onError() {
+                System.out.println("on error");
+            }
+        });
+        baseNetTopBusiness.startRequest(arequest);
+        return proItems;
     }
 
     /**
@@ -73,61 +134,14 @@ public class ConnectActivity extends AppCompatActivity {
                     Constants.isProSelected.add(i,false);
                 }
             }
-            // 转到ShowDataActivity
-            Intent i = new Intent();
-            Bundle bundle = new Bundle();
-            // 发送选择工序的个数
-            bundle.putInt("count", Constants.proChoose.size());
-            i.putExtras(bundle);
-            i.setClass(ConnectActivity.this, ShowDataActivity.class);
-            startActivity(i);
+
         } else {
             Toast.makeText(ConnectActivity.this, "您还没有选择工序!", Toast.LENGTH_LONG).show();
         }
 
     }
 
-    /**
-     * 发送读取工序申请  获取所有工序
-     */
-    private void getProItems() {
-        // SecondRequest 申请得到所有的工序信息
-        SecondRequest arequest = new SecondRequest();
-        BaseNetTopBusiness baseNetTopBusiness = new BaseNetTopBusiness(new NetTopListener() {
-            @Override
-            public void onSuccess(HttpResponse response) {
-                System.out.println("成功");
-                // 获得返回字节
-                byte[] bytes = response.bytes;
-                // 显示工序列表
-                try {
-                    String str = new String(bytes, "gbk");
-                    JSONObject object = new JSONObject(str);
-                    proItems = new String[object.length()];    // 工序名称数组
-                    // 逐条显示工序
-                    for (int i = 0; i < object.length(); i++) {
-                        // 动态添加到已有布局
-                        // 获取工序名称
-                        String s = object.getString(Integer.toString(i));
-                        proItems[i] = s;
 
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            @Override
-            public void onFail() {
-                System.out.println("on fail");
-            }
-
-            @Override
-            public void onError() {
-                System.out.println("on error");
-            }
-        });
-        baseNetTopBusiness.startRequest(arequest);
-    }
 
     /**
      * 获取测点名称列表
